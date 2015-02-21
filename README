@@ -1,15 +1,18 @@
-Timescape is a Drupal 7.x module developed by Semandra Inc. in 2014 with the 
-support of the Digital Page project (http://digitalpage.ca) and the Whalley 
+Timescape is a Drupal 7.x module to create and display events on a timeline.
+It is currently in development (Feb. 2015) so is not fully useful in its 
+current version (see issues).
+
+Timescape is being developed by Semandra Inc. with the support of the Digital 
+Page project (http://digitalpage.ca) and the Whalley 
 Project (http://georgewhalley.ca) It is forks work done in 2011 by Martin 
 Norling of the International Livestock Research Institute (ILRI) in Nairobi 
-Kenya (https://github.com/ilri/TimeView-Drupal-Module).
+Kenya (https://github.com/ilri/TimeView-Drupal-Module). 
 
-The module plots data on a timeline using the Simile Timeline Widget. It uses
-the Drupal MySQL database and can import data via an administration form. 
+The module plots data on a timeline using the Simile Timeline Widget.  
 
 DEPENDENCIES:
 
-The Timescape module uses the following independently developed jQuery packages 
+The Timescape module includes the following independently developed packages 
 and without them this tool wouldn't have been possible. 
 
 Simile Timeline
@@ -17,4 +20,14 @@ Simile Timeline
 This is the actual timeline widget that is used to display the timeline. It is 
 available from http://www.simile-widgets.org/timeline/. Timescape is currently 
 using TimeLine version 2.3.0.
+
+INSTALLATION
+
+Standard Drupal module deployment - https://www.drupal.org/node/120641. 
+There are no other Drupal dependancies. 
+
+VERSIONS
+
+
+USER GUIDE
 
