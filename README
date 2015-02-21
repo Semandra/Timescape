@@ -1,0 +1,29 @@
+Timescape is a Drupal 7.x module developed by Semandra Inc. in 2014. It is 
+alters/extends work done in 2011 by Martin Norling of the 
+International Livestock Research Institute (ILRI) in Nairobi Kenya. 
+
+The module plots data on a timeline using the Simile Timeline Widget. It uses
+the Drupal MySQL database and can import data via an administration form. 
+
+DEPENDENCIES:
+
+The Timescape module uses the following independently developed jQuery packages 
+and without them this tool wouldn't have been possible. 
+
+Simile Timeline
+-------------------------------------------------------------------------------
+This is the actual timeline widget that is used to display the timeline. It is 
+available from http://www.simile-widgets.org/timeline/. Timescape is currently 
+using TimeLine version 2.3.0.
+
+Any+Time
+-------------------------------------------------------------------------------
+Timescape uses the Any+Time Datetimepicker written by Andrew M Andrews III, 
+available at http://www.ama3.com/anytime/. The current version of Timescape is 
+using v4.1112H.
+
+MultiFile
+-------------------------------------------------------------------------------
+MultiFile is a jQuery module that allows for multiple file uploads. It is 
+available from http://www.fyneworks.com/jquery/multiple-file-upload/. The 
+current version of Timescape uses jQuery Multiple File Upload Plugin v1.29.

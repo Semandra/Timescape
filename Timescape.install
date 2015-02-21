@@ -1,0 +1,128 @@
+<?php
+
+/**
+ * This file is part of Timescape developed by Wolf Maul and Semandra Inc. 
+ * 2014-15 - http://semandra.com.
+ * 
+ * Timescape is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Timescape (like TimeView it is based on) is distributed in the hope that 
+ * it will be useful, but WITHOUT ANY WARRANTY; without even the implied 
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Timescape.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * @file
+ * Schema defintion, install, update and uninstall functions for the Timescape
+ * module.
+ */
+
+/**
+ * Creates the Timescape events table in the Drupal database.
+ *
+ * Creates the Events table, "timescape_event", in the Drupal database. This 
+ * table holds the user added events and has the following schema;
+ * - id, unsigned serial (unsigned auto incrementing integer)
+ * - name, varchar(100)
+ * - location, varchar(50)
+ * - start_date, datetime
+ * - end_date, datetime
+ * - institutions, varchar(200)
+ * - category, varchar(50)
+ * - comments, text, medium
+ * - documents, text, medium
+ *
+ * @return array
+ *   An array containing the drupal definition of the database. This definition
+ *   is database independent.
+*/
+function Timescape_schema() {
+  return array('timescape_event' => 
+               array('description' => 'Stores events for the Timescape timeline.',
+                     'fields' => array('id'           => array('description' => 'Auto incrementing ID value.',
+                                                               'type' => 'serial',
+                                                               'size' => 'normal',
+                                                               'not null' => True,
+                                                               'unsigned' => True,
+                                                               ),
+                                       'name'         => array('description' => 'Name of the event.',
+                                                               'type' => 'varchar',
+                                                               'length' => 100,
+                                                               'not null' => False,
+                                                               ),
+                                       'location'     => array('description' => 'Locale of the event.',
+                                                               'type' => 'varchar',
+                                                               'length' => 50,
+                                                               'not null' => False,
+                                                               ),
+                                       'start_date'   => array('description' => 'Start date of the event.',
+                                                               'type' => 'int',
+                                                               'size' => 'normal',
+                                                              ),
+                                       'end_date'     => array('description' => 'End date of the event.',
+                                                               'type' => 'int',
+                                                               'size' => 'normal',
+                                                              ),
+                                       'category'    => array('description' => 'Event category.',
+                                                              'type' => 'varchar',
+                                                              'length' => 50, 
+                                                              ),
+                                       'comments'    => array('description' => 'Event comments.',
+                                                              'type' => 'text',
+                                                              'size' => 'medium', 
+                                                              ),
+                                       'documents'   => array('description' => 'Documents attached to the event',
+                                                              'type' => 'text',
+                                                              'size' => 'medium', 
+                                                              ),
+                                       'created_by'  => array('description' => 'user name of the creator',
+                                                             'type' => 'varchar',
+                                                             'length' => 50,
+                                                              ),
+                                       'created_at'  => array('description' => 'creation time',
+                                                             'type' => 'int',
+                                                              'size' => 'normal',
+                                                              ),
+                                       'updated_by'  => array('description' => 'user name of the updator',
+                                                             'type' => 'varchar',
+                                                             'length' => 50,
+                                                              ),
+                                       'updated_at'  => array('description' => 'update time',
+                                                             'type' => 'int',
+                                                              'size' => 'normal',
+                                                              ),
+                                         ),
+                     'primary key' => array('id',),
+                     'mysql_suffix' => " DEFAULT CHARACTER SET UTF8",
+                    ),
+              );
+}
+
+/**
+ * Installs default behaviour for the Timescape module.
+ *
+ * By the first release this function is just a placeholder and does not 
+ * install anything to the database or otherwise.
+*/
+function Timescape_install() {}
+
+/**
+ * Uninstalls the Timescape module.
+ *
+ * This function empties the Timescape database so make sure to backup your data
+ * before uninstalling the module!
+*/
+function Timescape_uninstall() {
+  // Delete Timescape system variables
+  variable_del('Timescape_dbhost');
+  variable_del('Timescape_dbname');
+  variable_del('Timescape_dbuser');
+  variable_del('Timescape_dbpass');
+}

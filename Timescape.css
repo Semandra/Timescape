@@ -1,0 +1,491 @@
+/**
+ * This file is part of Timescape developed by Wolf Maul and Semandra Inc. 
+ * 2014-15 - http://semandra.com.
+ * 
+ * Timescape is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Timescape is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Timescape.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+#Timescape .Timescape_active {
+  border: 1px solid #333;
+  height: 700px;
+  min-width: 400px;
+}
+
+#Timescape .timeline-band-0 .timeline-ether-bg {
+    background-color: #f9f9f9;
+}
+
+#Timescape .timeline-band-layer-inner {
+	/*margin-top: 20px
+*/
+}
+
+.timeview_checkboxes .form-item {
+    display: inline;
+    width: auto;
+    padding: 0 40px 0 0;
+}
+
+#timeview_controls {
+    margin: -20px 0 0 0;
+    text-decoration: none;
+    font-size: 0.5em;
+    text-align: left;
+}
+
+#timeview_controls a {
+    padding: 0 20px 0 0;
+}
+
+.timeline-event-bubble-body td {
+    padding: 0 !important;
+}
+
+
+/* ------------------------ custom classes for Digital Page   ------------------------------- */
+
+#NavText a {
+	padding: 10px 20px;
+}
+#Timescape_timeline .timeline-event-icon {
+
+}
+#Timescape_timeline .timeline-event-tape {
+	min-width: 8px;
+}
+
+#Timescape_timeline .timeline-event-tape, .timeline-small-event-tape, .timeline-small-event-icon  {
+    background-color: #fff;
+}
+
+#Timescape_timeline .timeline-event-tape.tapeLayer0, #Timescape_timeline .timeline-event-tape.tapeLayer1  {
+	/*background-color: #205092;*/
+	background-image: -webkit-linear-gradient(270deg,rgba(32,80,146,0.40) 0%,rgba(32,80,146,0.40) 100%);
+	background-image: -moz-linear-gradient(270deg,rgba(32,80,146,0.40) 0%,rgba(32,80,146,0.40) 100%);
+	background-image: -o-linear-gradient(270deg,rgba(32,80,146,0.40) 0%,rgba(32,80,146,0.40) 100%);
+	background-image: linear-gradient(180deg,rgba(32,80,146,0.40) 0%,rgba(32,80,146,0.40) 100%);
+	border-radius: 5px;
+	border-width: 5px;
+}
+
+#Timescape_timeline .timeline-event-tape.tapeLayer1.startKnown {
+	border-left: solid 5px #205092;
+	border-right: none;
+	border-radius: 5px;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.startKnown.endKnown {
+	border-left: solid 5px #205092;
+	border-right: solid 5px #205092;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer1.endKnown  {
+	border-right: solid 5px #205092 ;
+	border-left: none;
+}
+
+/*  Single Event - from a date to a date */
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between  {
+	background-image: url(images/dp-blue-bg.png);
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown  {
+	border-left: solid 5px #205092 ;
+	border-right: none;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.endKnown  {
+	border-right: solid 5px #205092 ;
+	border-left: none;	
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown  {
+	border-left: solid 5px #205092 ;
+	border-right: solid 5px #205092 ;
+}
+
+/*  Single Event - single date */
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent  {
+
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown  {
+	border-left: solid 4px #205092 ;
+	border-right: none;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.endKnown  {
+	border-right: solid 4px #205092 ;
+	border-left: none;	
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.endKnown, #Timescape_timeline .timeline-event-tape.tapeLayer1.startKnown.endKnown {
+	border-left: solid 4px #205092 ;
+	border-right: solid 4px #205092 ;
+}
+
+
+
+/*  --------------------  Writing Event     ------------------------------------- */
+
+#Timescape_timeline .timeline-event-tape.tapeLayer0.writing_event , #Timescape_timeline .timeline-event-tape.tapeLayer1.writing_event   {
+	/*background-color: #205092;*/
+	background-image: -webkit-linear-gradient(270deg,rgba(0,146,0,0.4) 0%,rgba(0,146,0,0.6) 100%);
+	background-image: -moz-linear-gradient(270deg,rgba(0,146,0,0.4) 0%,rgba(0,146,0,0.6) 100%);
+	background-image: -o-linear-gradient(270deg,rgba(0,146,0,0.4) 0%,rgba(0,146,0,0.6) 100%);
+	background-image: linear-gradient(180deg,rgba(0,146,0,0.4) 0%,rgba(0,146,0,0.6) 100%);
+	border-radius: 5px;
+	border-width: 5px;
+}
+
+#Timescape_timeline .timeline-event-tape.tapeLayer1.startKnown.writing_event {
+	border-left: 5px solid #009200;
+	border-right: none;
+	border-radius: 5px;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.startKnown.endKnown.writing_event {
+	border-left: solid 5px #009200;
+	border-right: solid 5px #009200;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer1.endKnown.writing_event  {
+	border-right: solid 5px #009200 ;
+	border-left: none;
+}
+
+/*  Single Event - from a date to a date */
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.writing_event  {
+	background-image: url(images/dp-lightgreen-bg.png);
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.writing_event  {
+	border-left: solid 5px #009200 ;
+	border-right: none;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.endKnown.writing_event  {
+	border-right: solid 5px #009200 ;
+	border-left: none;	
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown.writing_event  {
+	border-left: solid 5px #009200 ;
+	border-right: solid 5px #009200 ;
+}
+
+/*  Single Event - single date */
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.writing_event  {
+
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.writing_event  {
+	border-left: solid 4px #009200 ;
+	border-right: none;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.endKnown.writing_event  {
+	border-right: solid 4px #009200 ;
+	border-left: none;	
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.endKnown.writing_event, #Timescape_timeline .timeline-event-tape.tapeLayer1.startKnown.endKnown.writing_event {  
+	border-left: solid 4px #009200 ;
+	border-right: solid 4px #009200 ;
+}
+
+
+/*  --------------------  Art Event - red    ------------------------------------- */
+
+#Timescape_timeline .timeline-event-tape.tapeLayer0.art_event , #Timescape_timeline .timeline-event-tape.tapeLayer1.art_event   {
+	/*background-color: #205092;*/
+	background-image: -webkit-linear-gradient(270deg,rgba(164,4,4,0.4) 0%,rgba(164,4,4,0.4) 100%);
+	background-image: -moz-linear-gradient(270deg,rgba(164,4,4,0.4) 0%,rgba(164,4,4,0.4) 100%);
+	background-image: -o-linear-gradient(270deg,rgba(164,4,4,0.4) 0%,rgba(164,4,4,0.4) 100%);
+	background-image: linear-gradient(180deg,rgba(164,4,4,0.4) 0%,rgba(164,4,4,0.4) 100%);
+	border-radius: 5px;
+	border-width: 5px;
+}
+
+#Timescape_timeline .timeline-event-tape.tapeLayer1.startKnown.art_event {
+	border-left: solid 5px #A40404;
+	border-right: none;
+	border-radius: 5px;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.startKnown.endKnown.art_event {
+	border-left: solid 5px #A40404;
+	border-right: solid 5px #A40404;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer1.endKnown.art_event  {
+	border-right: solid 5px #A40404 ;
+	border-left: none;
+}
+
+/*  Single Event - from a date to a date */
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.art_event  {
+	background-image: url(images/dp-red-bg.png);
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.art_event  {
+	border-left: solid 5px #A40404 ;
+	border-right: none;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.endKnown.art_event  {
+	border-right: solid 5px #A40404 ;
+	border-left: none;	
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown.art_event, #Timescape_timeline .timeline-event-tape.tapeLayer1.startKnown.endKnown.art_event {  
+	border-left: solid 5px #A40404 ;
+	border-right: solid 5px #A40404 ;
+}
+
+/*  Single Event - single date */
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.art_event  {
+
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.art_event  {
+	border-left: solid 4px #A40404 ;
+	border-right: none;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.endKnown.art_event  {
+	border-right: solid 4px #A40404 ;
+	border-left: none;	
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.endKnown.art_event  {
+	border-left: solid 4px #A40404 ;
+	border-right: solid 4px #A40404 ;
+}
+
+/*  --------------------  Correspondence    ------------------------------------- */
+/*  Range Event - from a date to a date */
+
+#Timescape_timeline .timeline-event-tape.tapeLayer0.letter_event , #Timescape_timeline .timeline-event-tape.tapeLayer1.letter_event   {
+	/*background-color: #205092;*/
+	background-image: -webkit-linear-gradient(270deg,rgba(61,0,188,0.4) 0%,rgba(61,0,188,0.6) 100%);
+	background-image: -moz-linear-gradient(270deg,rgba(61,0,188,0.4) 0%,rgba(61,0,188,0.6) 100%);
+	background-image: -o-linear-gradient(270deg,rgba(61,0,188,0.4) 0%,rgba(61,0,188,0.6) 100%);
+	background-image: linear-gradient(180deg,rgba(61,0,188,0.4) 0%,rgba(61,0,188,0.6) 100%);
+	border-radius: 5px;
+	border-width: 5px;
+}
+
+#Timescape_timeline .timeline-event-tape.tapeLayer1.startKnown.letter_event {
+	border-left: 5px solid #3D00BC;
+	border-right: none;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.startKnown.endKnown.letter_event {
+	border-left: solid 5px #3D00BC;
+	border-right: solid 5px #3D00BC;
+}
+
+#Timescape_timeline .timeline-event-tape.tapeLayer1.endKnown.letter_event {
+	border-right: solid 5px #3D00BC;
+	border-left: none;
+}
+
+/*  Single Event - from a date to a date */
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.letter_event {
+	background-image: url(images/dp-lightpurple-bg.png);
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.letter_event {
+	border-left: solid 5px #3D00BC;
+	border-right: none;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.endKnown.letter_event {
+	border-right: solid 5px #3D00BC;
+	border-left: none;	
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown.letter_event, #Timescape_timeline .timeline-event-tape.tapeLayer1.startKnown.endKnown.letter_event {
+	border-left: solid 5px #3D00BC;
+	border-right: solid 5px #3D00BC;
+}
+
+/*  Single Event - single date */
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.letter_event {
+
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.letter_event {
+	border-left: solid 4px #3D00BC;
+	border-right: none;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.endKnown.letter_event {
+	border-right: solid 4px #3D00BC;
+	border-left: none;	
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.endKnown.letter_event {
+	border-left: solid 4px #3D00BC;
+	border-right: solid 4px #3D00BC;
+}
+
+/*  --------------------  Life Event    ------------------------------------- */
+/*  Range Event - from a date to a date */
+
+#Timescape_timeline .timeline-event-tape.tapeLayer0.life_event , #Timescape_timeline .timeline-event-tape.tapeLayer1.life_event   {
+	/*background-color: #205092;*/
+	background-image: -webkit-linear-gradient(270deg,rgba(66,175,221,.4) 0%,rgba(66,175,221,0.62) 100%);
+	background-image: -moz-linear-gradient(270deg,rgba(66,175,221,.4) 0%,rgba(66,175,221,0.62) 100%);
+	background-image: -o-linear-gradient(270deg,rgba(66,175,221,.4) 0%,rgba(66,175,221,0.62) 100%);
+	background-image: linear-gradient(180deg,rgba(66,175,221,.4) 0%,rgba(66,175,221,0.62) 100%);
+	border-radius: 5px;
+	border-width: 5px;
+}
+
+#Timescape_timeline .timeline-event-tape.tapeLayer1.startKnown.life_event {
+	border-left: 5px solid #1096CF;
+	border-right: none;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.startKnown.endKnown.life_event {
+	border-left: solid 5px #1096CF;
+	border-right: 5px solid #1096CF;
+}
+
+#Timescape_timeline .timeline-event-tape.tapeLayer1.endKnown.life_event {
+	border-right: solid 5px #1096CF;
+	border-left: none;
+}
+
+/*  Single Event - from a date to a date */
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.life_event {
+	background-image: url(images/dp-lightblue-bg.png);
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.life_event {
+	border-left: solid 5px #1096CF;
+	border-right: none;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.endKnown.life_event {
+	border-right: solid 5px #1096CF;
+	border-left: none;	
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown.life_event, #Timescape_timeline .timeline-event-tape.tapeLayer1.startKnown.endKnown.life_event {
+	border-left: solid 5px #1096CF;
+	border-right: solid 5px #1096CF;
+}
+
+/*  Single Event - single date */
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.life_event {
+
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.life_event {
+	border-left: solid 4px #1096CF;
+	border-right: none;
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.endKnown.life_event {
+	border-right: solid 4px #1096CF;
+	border-left: none;	
+}
+#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.endKnown.life_event {
+	border-left: solid 4px #1096CF;
+	border-right: solid 4px #1096CF;
+}
+
+
+
+.timeline-event-icon, .timeline-event-label, .timeline-event-tape {
+    font-size: 13px;
+}
+
+/* =====================    Bubble Display     ========================== */
+
+.page-timeview div.simileAjax-bubble-container {
+/*    margin-left: 5px;
+    margin-top: -15px;*/
+}
+
+
+	
+.timeline-event-bubble-title {
+	display: none;
+}
+.page-timeview .timeline-event-bubble-time {
+    color: #333;
+	margin-top: 10px;
+}
+
+
+/* =====================    Timeline Legend     ========================== */
+
+#timelineLegend {
+    height: 200px;
+    margin-left: 400px;
+    margin-top: -70px;
+	background-color: #fff;
+	padding: 0 0 0 30px;
+}
+#timelineLegend #legendCategoryWriting {
+	color: #009200 
+}
+#timelineLegend #legendCategoryLetter {
+	color: #3D00BC
+}
+#timelineLegend #legendCategoryArt {
+	color: #A40404 
+}
+#timelineLegend #legendCategoryLife {
+	color: #1096CF
+}
+
+#timelineLegend p{
+	text-transform: uppercase;
+	color: #555;	
+}
+#timelineDots p {
+	font-size: 12px;
+	margin: 2px;
+	text-transform:inherit;
+}
+
+#timelineCategories, #timelineDots {
+	float: left;
+	padding: 10px;
+	margin-top: 20px;
+}
+#timelineDots{
+    border: 1px solid #ccc;
+    margin: 10px 0 0 20px;
+    
+}
+
+#timelineDots .iconWrapper{
+	width:45px;
+}
+#timelineDots td {
+	padding-right: 5px;
+}
+
+#timelineDots td.icon div{
+	margin: auto;
+}
+
+#timelineLegend .legendItems{
+	height: 10px;
+    min-width: 0;
+    width: 6px;
+	border-color: #444;
+	background-image: linear-gradient(180deg, rgba(30, 30, 30, 0.3) 0%, rgba(30, 30, 30, 0.3) 100%);
+	
+}
+#timelineLegend .legendItems.startKnown{
+	 border-radius: 5px 0 0 5px;
+    border-width: 6px;
+	width: 0;
+	border: solid #333;
+	
+}
+#timelineLegend .legendItems.endKnown{
+	 border-radius: 0 5px 5px 0;
+    border-width: 6px;
+	width: 0;
+	border: solid #333;
+}
+#timelineLegend .legendItems.endUnknown{
+	border-radius: 0 5px 5px 0;
+}
+#timelineLegend .legendItems.startUnknown{
+	border-radius: 5px 0 0 5px;
+}
+.timeline-event-tape.tapeLayer0.singleDateEvent.between {
+    background-image: url("images/dp-grey-bg.png");
+}
+#timelineLegend .timeline-event-tape{
+	background-color: #fff;
+	position:relative;
+}
+
+
+
+
+

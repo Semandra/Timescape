@@ -1,0 +1,346 @@
+<?php
+
+// $Id$
+
+/**
+ * This file is part of Timescape developed by Wolf Maul for Semandra Inc. 
+ * 2014-15 - http://semandra.com.
+ * 
+ * Timescape is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Timescape is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Timescape.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+ * Initialize the Timescape, timeline interface.
+ *
+ * This function loads external resources that are used by the Timescape 
+ * module. Mainly it lods the module specific css-files and the Timeline 
+ * rendering javascript from Simile.
+*/
+function Timescape_init() {
+  include_once(drupal_get_path('module', 'Timescape') . '/Timescape.inc');
+  drupal_add_css(drupal_get_path('module', 'Timescape') . '/Timescape.css');
+  // Load Timeline 2.3.0 javascripts
+  // Excplicitly load the ajax api to avoid load on the timeline server
+  drupal_add_js('Timeline_ajax_url="' . drupal_get_path('module', 'Timescape') . '/timeline_2.3.0/timeline_ajax/simile-ajax-api.js";
+                 Timeline_urlPrefix="' . drupal_get_path('module', 'Timescape') . '/timeline_2.3.0/timeline_js/";       
+                 Timeline_parameters="bundle=true";', 
+                array('type' => 'inline',));
+  drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_2.3.0/timeline_js/timeline-api.js');
+  // Load datetimepicker functions and css for the input form
+  drupal_add_js(drupal_get_path('module', 'Timescape') . '/anytime/anytimec.js');
+  drupal_add_css(drupal_get_path('module', 'Timescape') . '/anytime/anytimec.css');
+  // Load the MultiFile upload scripts
+  //drupal_add_js(drupal_get_path('module', 'Timescape') . '/MultiFile/jquery.MultiFile.js');
+  // Load the specific timeline we want to use.
+  drupal_add_js(drupal_get_path('module', 'Timescape') . '/Timescape.js');
+  // Load http://momentjs.com/ to easily format dates
+  drupal_add_js(drupal_get_path('module', 'Timescape') . '/moment.js');
+  // Initialize the timeline javascript with another javascript function
+  drupal_add_js(Timescape_jQuery(), 'inline');
+}
+
+/** 
+ * Generates a user help page. 
+ *
+ * Creates a help page for the Timescape module. Explains configuration, usage 
+ * and some tips and tricks on what can be done.
+ *
+ * @param string $path
+ *   The router menu path, as defined in Timescape_menu().
+ * @param array $arg
+ *   An array that corresponds to the return value of the arg() function, for 
+ *   modules that want to provide help that is specific to certain values of 
+ *   wildcards in $path. For example, you could provide help for the path 
+ *   'user/1' by looking for the path 'user/%' and $arg[1] == '1'. This array 
+ *   should always be used rather than directly invoking arg(), because your 
+ *   hook implementation may be called for other purposes besides building the 
+ *   current page's help. Note that depending on which module is invoking 
+ *   hook_help, $arg may contain only empty strings. Regardless, $arg[0] to 
+ *   $arg[11] will always be set.
+ *   
+ * @return string
+ *   A localized string containing the help text.
+*/
+
+/*Currently not working - renders help text on all pages of site, in all views*/
+
+function Timescape_help($path, $arg){
+  
+/*  $help_output = '<p>' . t("Displays events on a timeline.") . '</p>';
+  return $help_output;*/
+
+}
+
+/**
+ * Handles module permissions.
+ *
+ * Defines the permissions that are used by the Timescape module. The 
+ * permissions are: 
+ * - "access Timescape": Access the timeline and see open information.
+ * - "access Timescape private": Private information is intended for 
+ *   Authorized Users. If there is no sensitive information on your timeline
+ *   disregard this permission.
+ * - "administer Timescape": Allows users to administer the Timescape module.
+ *
+ * @return array 
+ *   An array of permission strings. The strings must not be wrapped with the 
+ *   t() function, since the string extractor takes care of extracting 
+ *   permission names defined in the perm hook for translation.
+*/
+function Timescape_permission(){
+  return array('administer Timescape' => array(
+                 'title' => t('Administer Timescape'),
+                 'description' => t('Allows a user to administer the timeline 
+                                     and general settings of the Timescape 
+                                     module.'),
+               ),
+               'access Timescape' => array(
+                 'title' => t('Access Timescape'),
+                 'description' => t('Allows users to view the timeline and 
+                                     access open information.'),
+               ), 
+               'edit Timescape' => array(
+                 'title' => t('Edit Timescape'),
+                 'description' => t('With this permissions a user can add and
+                                     remove non-static things from the 
+                                     timeline.'),
+               ),
+              );
+}
+
+/**
+ * Creates the administration form for the Timescape module.
+ *
+ * Creates the administration form for the Timescape module, the form can be 
+ * found at /admin/settings/Timescape as defined in Timescape_menu.
+ *
+ * @return array $form
+ *   A drupal form formatted by system_settings_form().
+*/
+function Timescape_admin(){
+  $form = array(
+ //   '#type' => 'fieldset',  //Semandra --- tried this but didn't work
+  //  '#title' => t('Name'),   //Semandra
+  
+  
+  );
+  $form['data_source_type'] = array(
+    '#type' => 'radios',
+    '#title' => t('Data Type'),
+    '#options' => array(
+      'drupal' => t('Drupal content type (default)'),
+      'json' => t('Uploaded file (JSON)'),
+    ),
+    '#default_value' => variable_get('data_source_type', 'drupal'),
+  );
+  
+	return system_settings_form($form);
+}
+
+/**
+ * Creates the Timescape paths and menu items.
+ *
+ * Defines paths to Timescape pages and defines Timescape menu items. The 
+ * items that are defined are:
+ * - admin/config/content/timescape: This is the administration page
+ * - /timescape: This is the XML-generation hook
+ * - /timescape_edit: Edit/create events form.
+ * - /timescape_delete: Delete an event.
+*/
+function Timescape_menu() {
+  $items = array();
+  $items['admin/config/content/timescape'] = 
+    array('title' => 'Timescape',
+	  'description' => 'Administration page for the Timescape module.',
+	  'page callback' => 'drupal_get_form',
+	  'page arguments' => array('Timescape_admin'),
+	  'access arguments' => array('administer Timescape'),
+	  'type' => MENU_NORMAL_ITEM,
+	  );
+	$items['timescape'] = 
+		array('page callback' => 'Timescape_view',
+		'access arguments' => array('access Timescape'),
+		'type' => MENU_CALLBACK,
+		);
+	$items['timescape/xml'] =
+    array('page callback' => 'Timescape_XML',
+	  'access arguments' => array('access Timescape'),
+	  'type' => MENU_CALLBACK,
+	  );
+	$items['timescape/json'] =
+    array('page callback' => 'Timescape_JSON',
+	  'access arguments' => array('access Timescape'),
+	  'type' => MENU_CALLBACK,
+	  );
+	$items['timescape/edit'] =
+    array('title' => 'Edit Timeline',
+    'page callback' => 'Timescape_edit',
+	  'access arguments' => array('edit Timescape'),
+	  'type' => MENU_CALLBACK,
+	  );
+	$items['timescape/delete'] =
+    array('title' => 'Deleting a timeline event',
+    'page callback' => 'drupal_get_form',
+		'page arguments' => array('Timescape_delete'),
+	  'access arguments' => array('edit Timescape'),
+	  'type' => MENU_CALLBACK,
+	  );
+  return $items;
+}
+
+/**
+ * Creates the blocks of the Timescape module.
+ *
+ * Creates the block content for the Timescape module. This module has two 
+ * blocks, the timeline block and the timeline event input block.
+ * 
+ * @return array $blocks
+*/
+function Timescape_block_info(){
+  $blocks = array();
+  
+  return $blocks;
+}
+
+/**
+ * Creates the configuration form for the Timescape module blocks.
+ *
+ * @param string $delta
+ *   Which block is being configured. This is a unique identifier for the 
+ *   block within the module, defined in hook_block_info().
+ *
+ * @return array $form
+ *   A configuration form, if one is needed for your block beyond the standard 
+ *   elements that the block module provides (block title, visibility, etc.).
+*/
+function Timescape_block_configure($delta = '') {
+  $form = array();
+  
+
+  return $form; 
+}
+
+/**
+ * The main Timescape blocks view. There are no blocks right now.
+ *
+ * @param string $delta
+ *   Which block to render. This is a unique identifier for the block within 
+ *   the module, defined in Timescape_block_info().
+ *
+ * @return array $page_content
+ *   An array containing the following elements:
+ *   - subject: The default localized title of the block. If the block does 
+ *     not have a default title, this should be set to NULL.
+ *   - content: The content of the block's body. This may be a renderable 
+ *     array (preferable) or a string containing rendered HTML content.
+*/
+function Timescape_block_view($delta = '') {
+  $page_content = array('subject' => '',
+                        'content' => '',);
+  
+  if (module_exists('locale')) {
+    $languages = language_list();
+    // Todo: Implement translations
+  }
+  return $page_content;
+}
+
+/**
+ * Page callback for timescape main page
+ *
+ * The main page of the Timescape module is rendered here, Most of the actual 
+ * rendering is made using external functions but this function passes them 
+ * to the renderer.
+ *
+ * @return string $html
+ *   String containing the returned html.
+*/
+function Timescape_view() {
+	$page_content  = '';
+  $page_content .= '<div id="Timescape">';
+	if (user_access('edit Timescape')) {
+		$page_content .= '<p style="text-align: right;"><a href="?q=timescape/edit" style="font-size: 18px">+ ADD NEW</a> - Or click on event to edit/delete.</p>';
+	}
+	/*$page_content .=  '<div id="timelineLegend">
+        <div id="timelineCategories">
+            <p id="legendCategoryWriting">Writings</p>
+            <p id="legendCategoryArt">Visual Art</p>
+            <p id="legendCategoryLetter">Correspondence</p>
+            <p id="legendCategoryLife">Life</p>
+        </div>
+        
+        <div id="timelineDots">
+        	<table>
+              <tr>
+                <td class="icon"><div id="" class="legendItems startKnown timeline-event-tape tapeLayer0 singleDateEvent" style=" "></div></td>
+                <td> <p>Beginning Precisely</p></td>
+              </tr>
+              <tr>
+                <td class="icon"><div id="" class="legendItems endKnown timeline-event-tape tapeLayer0 singleDateEvent" style=""></div></td>
+                <td><p>Ending Precisely</p></td>
+              </tr>
+              <tr>
+                <td class="icon"><div id="" class="legendItems endUnknown timeline-event-tape tapeLayer0 " style=""></div></td>
+                <td><p>Beginning Approximately</p></td>
+              </tr>
+              <tr>
+                <td class="icon"><div id="" class="legendItems startUnknown timeline-event-tape tapeLayer0 " style=""></div></td>
+                <td><p>Ending Approximately</p></td>
+              </tr>
+              <tr>
+                <td class="icon"><div id="" class="legendItems startKnown endKnown between timeline-event-tape tapeLayer1" style="width: 45px; height: 8px; opacity: 1;border:none; border-radius:0"></div></td>
+                <td><p>From... To...</p></td>
+              </tr>
+              <tr>
+                <td class="icon"><div id="" class="startKnown endKnown between timeline-event-tape tapeLayer0 singleDateEvent" style="width: 45px; height: 8px; opacity: 1; border:none;"></div></td>
+                <td><p>Between... And...</p></td>
+              </tr>
+            </table>
+            <div class="iconWrapper">
+            	
+            </div>
+              
+        </div>
+    
+    </div>';*/
+	$page_content .= '<div id="NavText" style="display:none;"><a href="javascript:centerTimeline(1920);">Move to Beginning</a><a href="javascript:centerTimeline(2010);">Move to End</a></div>';
+  $page_content .= '<div id="Timescape_timeline"></div>';
+  $page_content .= '</div>';
+	return $page_content;
+}
+
+/**
+ * Page callback for timescape_edit. 
+ *
+ * @param int $id
+ *   If supplied the form will be editing the event with $id.
+ *
+ * @return string $html
+ *   String containing the returned html.
+*/
+function Timescape_edit($id = 0) {
+	$pageInput_Render = drupal_get_form('_Timescape_Input', _Timescape_load($id));
+	
+  $page_content  = '';
+  $page_content .= '<div id="Timescape_input">';
+  $page_content .= drupal_render($pageInput_Render);
+  $page_content .= '</div>';
+  return $page_content;
+}
+
+function Timescape_admin_paths_alter(&$paths) {
+  // Treat all user pages as administrative.
+  $paths['timescape/edit'] = TRUE;
+
+}
