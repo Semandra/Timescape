@@ -16,14 +16,3 @@ This is the actual timeline widget that is used to display the timeline. It is
 available from http://www.simile-widgets.org/timeline/. Timescape is currently 
 using TimeLine version 2.3.0.
 
-Any+Time
--------------------------------------------------------------------------------
-Timescape uses the Any+Time Datetimepicker written by Andrew M Andrews III, 
-available at http://www.ama3.com/anytime/. The current version of Timescape is 
-using v4.1112H.
-
-MultiFile
--------------------------------------------------------------------------------
-MultiFile is a jQuery module that allows for multiple file uploads. It is 
-available from http://www.fyneworks.com/jquery/multiple-file-upload/. The 
-current version of Timescape uses jQuery Multiple File Upload Plugin v1.29.
