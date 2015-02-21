@@ -1,6 +1,8 @@
-Timescape is a Drupal 7.x module developed by Semandra Inc. in 2014. It is 
-alters/extends work done in 2011 by Martin Norling of the 
-International Livestock Research Institute (ILRI) in Nairobi Kenya. 
+Timescape is a Drupal 7.x module developed by Semandra Inc. in 2014 with the 
+support of the Digital Page project (http://digitalpage.ca) and the Whalley 
+Project (http://georgewhalley.ca) It is forks work done in 2011 by Martin 
+Norling of the International Livestock Research Institute (ILRI) in Nairobi 
+Kenya (https://github.com/ilri/TimeView-Drupal-Module).
 
 The module plots data on a timeline using the Simile Timeline Widget. It uses
 the Drupal MySQL database and can import data via an administration form. 
