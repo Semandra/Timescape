@@ -38,14 +38,14 @@ function Timescape_init() {
                 array('type' => 'inline',));
   drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_2.3.0/timeline_js/timeline-api.js');
   // Load datetimepicker functions and css for the input form
-  drupal_add_js(drupal_get_path('module', 'Timescape') . '/anytime/anytimec.js');
-  drupal_add_css(drupal_get_path('module', 'Timescape') . '/anytime/anytimec.css');
+  //drupal_add_js(drupal_get_path('module', 'Timescape') . '/anytime/anytimec.js');
+  //drupal_add_css(drupal_get_path('module', 'Timescape') . '/anytime/anytimec.css');
   // Load the MultiFile upload scripts
   //drupal_add_js(drupal_get_path('module', 'Timescape') . '/MultiFile/jquery.MultiFile.js');
   // Load the specific timeline we want to use.
   drupal_add_js(drupal_get_path('module', 'Timescape') . '/Timescape.js');
   // Load http://momentjs.com/ to easily format dates
-  drupal_add_js(drupal_get_path('module', 'Timescape') . '/moment.js');
+  //drupal_add_js(drupal_get_path('module', 'Timescape') . '/moment.js');
   // Initialize the timeline javascript with another javascript function
   drupal_add_js(Timescape_jQuery(), 'inline');
 }
