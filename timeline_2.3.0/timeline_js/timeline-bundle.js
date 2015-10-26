@@ -1646,8 +1646,10 @@ Timeline.PointHighlightDecorator.prototype.paint = function() {
 };
 Timeline.PointHighlightDecorator.prototype.softPaint = function() {};
 
+/* ======================================================================================= */
+/*                          detailed-painter.js                       */
+/* ======================================================================================= */
 
-/* detailed-painter.js */
 Timeline.DetailedEventPainter = function(params) {
     this._params = params;
     this._onSelectListeners = [];
@@ -1718,7 +1720,8 @@ Timeline.DetailedEventPainter.prototype.paint = function() {
     var highlightMatcher = (this._highlightMatcher != null) ? this._highlightMatcher : function(evt) {
         return -1;
     };
-    var iterator = eventSource.getEventReverseIterator(minDate, maxDate);
+    //var iterator = eventSource.getEventReverseIterator(minDate, maxDate); 
+	var iterator = eventSource.getEventIterator(minDate, maxDate); //Semandra
     while (iterator.hasNext()) {
         var evt = iterator.next();
         if (filterMatcher(evt)) {
@@ -2992,8 +2995,10 @@ Timeline.GregorianDateLabeller.prototype.defaultLabelInterval = function(date, i
     };
 };
 
+/* ======================================================================================= */
+/*                          original-painter.js                      */
+/* ======================================================================================= */
 
-/* original-painter.js */
 Timeline.OriginalEventPainter = function(params) {
     this._params = params;
     this._onSelectListeners = [];
@@ -3069,7 +3074,8 @@ Timeline.OriginalEventPainter.prototype.paint = function() {
     var highlightMatcher = (this._highlightMatcher != null) ? this._highlightMatcher : function(evt) {
         return -1;
     };
-    var iterator = eventSource.getEventReverseIterator(minDate, maxDate);
+    //var iterator = eventSource.getEventReverseIterator(minDate, maxDate);
+	var iterator = eventSource.getEventIterator(minDate, maxDate); //Semandra
     while (iterator.hasNext()) {
         var evt = iterator.next();
         if (filterMatcher(evt)) {
@@ -3496,8 +3502,10 @@ Timeline.OriginalEventPainter.prototype._fireEventPaintListeners = function(op, 
     }
 };
 
+/* ======================================================================================= */
+/*                          overview-painter.js                      */
+/* ======================================================================================= */
 
-/* overview-painter.js */
 Timeline.OverviewEventPainter = function(params) {
     this._params = params;
     this._onSelectListeners = [];

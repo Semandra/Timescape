@@ -43,11 +43,14 @@ function Timescape_init() {
   // Load the MultiFile upload scripts
   //drupal_add_js(drupal_get_path('module', 'Timescape') . '/MultiFile/jquery.MultiFile.js');
   // Load the specific timeline we want to use.
-  drupal_add_js(drupal_get_path('module', 'Timescape') . '/Timescape.js');
+  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timescape-theme.js');
+  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timescape-original-painter.js');
+  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/simile-patch.js');
+  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/Timescape.js');
   // Load http://momentjs.com/ to easily format dates
-  //drupal_add_js(drupal_get_path('module', 'Timescape') . '/moment.js');
+  drupal_add_js(drupal_get_path('module', 'Timescape') . '/moment.js'); // Assists with date formatting 
   // Initialize the timeline javascript with another javascript function
-  drupal_add_js(Timescape_jQuery(), 'inline');
+  drupal_add_js(Timescape_jQuery(), 'inline'); // Adds execution code for on document load + setup/customization variables from admin
 }
 
 /** 
@@ -137,12 +140,46 @@ function Timescape_admin(){
   );
   $form['data_source_type'] = array(
     '#type' => 'radios',
-    '#title' => t('Data Type'),
+    '#title' => t('Data Type!'),
     '#options' => array(
       'drupal' => t('Drupal content type (default)'),
       'json' => t('Uploaded file (JSON)'),
     ),
     '#default_value' => variable_get('data_source_type', 'drupal'),
+  );
+  $form['ts_linked_file_path'] = array(
+    '#type' => 'textfield',
+    '#title' => t('URL link to JSON file'),
+	'#description' => t('Optional. Note: Entries will not be editable from the timeline. See <a href="#">JSON format</a>'),
+    '#default_value' => variable_get('ts_linked_file_path', ''),
+  );
+  $form['wolftest'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Text Test'),
+	'#default_value' => variable_get('wolftest', ''),
+  );
+  $form['center_year'] = array(
+    '#type' => 'textfield',
+	'#size' => '10',
+    '#title' => t('Center timeline on year (Format: YYYY) '),
+	'#default_value' => variable_get('center_year', ''),
+  );
+  $form['ts_bubble_group'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Bubble Display'),
+	 '#collapsible' => TRUE,
+	 '#collapsed' => FALSE,
+  );  
+  
+  $form['ts_bubble_group']['ts_show_all_dates'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Display full dates '),
+	'#default_value' => variable_get('ts_show_all_dates', true),
+  );
+  $form['ts_bubble_group']['ts_event_date_summary'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show date summary line'),
+	'#default_value' => variable_get('ts_event_date_summary', false),
   );
   
 	return system_settings_form($form);
@@ -270,7 +307,7 @@ function Timescape_view() {
 	$page_content  = '';
   $page_content .= '<div id="Timescape">';
 	if (user_access('edit Timescape')) {
-		$page_content .= '<p style="text-align: right;"><a href="?q=timescape/edit" style="font-size: 18px">+ ADD NEW</a> - Or click on event to edit/delete.</p>';
+		$page_content .= '<p style="text-align: right;"><a href="?q=timescape/edit" style="font-size: 18px">+ ADD NEW</a> - Or click on event to edit/delete.</p><h1>' . variable_get('wolftest','hello') . '</h1>';
 	}
 	/*$page_content .=  '<div id="timelineLegend">
         <div id="timelineCategories">

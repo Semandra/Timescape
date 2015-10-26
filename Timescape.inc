@@ -46,11 +46,15 @@ function Timescape_jQuery() {
         if ($('#Timescape').length) {
           $(document).ready(function() {
             	$('#Timescape_timeline').addClass('Timescape_active');
-            	Timescape_onLoad('" . url('timescape/xml') . "', 'Timescape_timeline'); //Creates an attached document generated at runtime from database table
+            	//Timescape_onLoad('" . url('timescape/xml') . "', 'Timescape_timeline'); //Creates an attached document generated at runtime from database table
 				//Timescape_onLoad('" . url('sites/all/files/timeline_test.xml') . "', 'Timescape_timeline'); //Semandra-XML format
 				//Timescape_onLoad('" . url('sites/all/files/PK-Timeline-Data-v01.json') . "', 'Timescape_timeline'); //Semandra-JSON format
 				//Timescape_onLoad('" . url('sites/all/files/PK_sample_2.json') . "', 'Timescape_timeline'); //Semandra-JSON format
+				Timescape_onLoad('" . url('timescape/json') . "', 'Timescape_timeline'); //JSON created from Timescape data table
+				//Timescape_onLoad('" . url('sites/all/files/test-database-generated.json') . "', 'Timescape_timeline'); //tweaked JSON from database
 				
+				
+				console.log('Im loaded');
       	  });
     	  }
         if ($('#Timescape_input').length) {
@@ -91,6 +95,7 @@ function Timescape_jQuery() {
 	function centerTimeline(year) {
 	  tl.getBand(0).setCenterVisibleDate(new Date(year, 0, 1));
   };
+   var d = Timeline.DateTime.parseGregorianDateTime('" . variable_get('center_year', '1900') . "');
   ";
   return $script;
 }
@@ -105,7 +110,7 @@ function Timescape_jQuery() {
 */
 function Timescape_XML() {
   drupal_add_http_header('Content-Type', 'text/xml');
-//  drupal_add_http_header('Content-Disposition', 'attachment; filename=Timescape.xml;');
+  //drupal_add_http_header('Content-Disposition', 'attachment; filename=Timescape.xml;');
   
   $events = _Timescape_load();
   
@@ -159,15 +164,99 @@ function Timescape_XML() {
 }
 
 /**
- * Generates JSON that is used by the timeline
+ * Generates timeline JSON from Timescape_event table
  *
  * Uses the php DOM functions to generate JSON from databases and static
  * content. This function does not return a drupal formatted page but an
  * JSON-file formatted as an attachment.
  *
 */
-/*function Timescape_JSON($var = NULL) {
-	$var ="texst";
+function Timescape_JSON($var = NULL) {
+	$events = _Timescape_load();
+	//$var = $events;
+	$var = array('events'=>[]);
+	
+
+
+	foreach ($events as $event) {
+		//format information [body in popup bubble] using information fields
+		$information = '';
+		
+		$information = "<h1>" . $event['name'] . "</h1>";
+		//$information .= "<pre>" . $json_response . "</pre>";
+		
+		$information .= $event['comments'];
+		$information .= "<span class='tinybutton'> " . l(t('Edit'), 'timescape/edit/' . $event['id']) . " </span>";
+		$information .= "<span class='tinybutton'> " . l(t('Delete'), 'timescape/delete/' . $event['id']) . " </span>";
+		
+		if (variable_get('ts_show_all_dates')){
+			$information .= "<div>";
+			$information .= "<span class='full-event-date'> " . $event['start_date'] . " </span>";
+			$information .= "<span class='full-event-date'> " . $event['end_date'] . " </span>";
+			$information .= "</div>";
+		}
+		if (variable_get('ts_event_date_summary')){
+			$information .= "<p class='event-date-summary'> " . $event['created_by'] . " </p>";
+		}
+		if (variable_get('ts_event_date_summary')){
+		//	$information .= "<p class='event-date-summary'> " . $event['created_by'] . " </p>";
+		}
+		if (variable_get('ts_event_date_summary')){
+		//	$information .= "<p class='event-date-summary'> " . $event['created_by'] . " </p>";
+		}
+		
+		
+		$node['description'] =  $information;
+		
+		$node['start'] = $event['start_date'];
+		//$node['latestStart'] = $event[' ???? '];
+		//$node['earliestEnd'] = $event[' ???? '];
+		$node['end'] = $event['end_date'];
+		$node['title'] = $event['name'];
+		//$node['durationEvent'] = $event[' ???? '];
+		//$node['icon'] = $event[' ???? '];
+		//$node['image'] = $event[' ???? '];
+		//$node['link'] = $event[' ???? '];
+		
+
+		
+		// EVENT POINT STYLING
+		// depending on the category, supply the appropriate classes
+		$node['class'] = "startKnown letter_event"; //$event['name'];
+		
+		array_push($var['events'], $node); 
+	}
+	
+	//-------------- load JSON file if URL provided ---------------
+	if (variable_get('ts_linked_file_path')){
+	//	$fileJSON = variable_get('ts_linked_file_path');
+		$url = variable_get('ts_linked_file_path');
+		$request = drupal_http_request($url);
+		$json_response = drupal_json_decode($request->data);
+		
+		foreach ($json_response as $response_data) {
+			
+			$information = '';
+			$information .= "<h1>" . $response_data['title'] . "</h1>";
+			
+			if (variable_get('ts_show_all_dates')){
+				$information .= "<div>";
+				$information .= "<span class='full-event-date'> " . $response_data['start'] . " </span>";
+				$information .= "<span class='full-event-date'> " . $response_data['end'] . " </span>";
+				$information .= "</div>";
+			}
+			
+			$response_data['description'] = $information;
+			
+	  		array_push($var['events'], $response_data);
+		
+		
+			
+			
+		}
+		
+	}
+	
 	
 	// We are returning JSON, so tell the browser.
   drupal_add_http_header('Content-Type', 'application/json');
@@ -175,14 +264,14 @@ function Timescape_XML() {
   if (isset($var)) {
     echo drupal_json_encode($var);
   }
-}*/
+}
 
 
 /**
  * Loads event information from the database
  *
- * This function uses drupal's built in database handlers and return a formatted
- * array of records that can later be converted to XML for the timeline [function Timescape_XML()].
+ * This function uses drupal's built in database handlers to return a formatted
+ * array of records that can later be converted to JSON (or XML) for the timeline [function Timescape_XML()].
  *
  * @param int $id
  *   Loads only the given $id
@@ -378,7 +467,7 @@ function _Timescape_Input($form, &$form_state, $values) {
  *   The current state of the form, supplied by drupal
 */
 function _Timescape_Input_validate(&$form, &$form_state) {
-  $date_regexp = '/\d{4}-\d{2}-\d{2} \d{2}:\d{2}/';
+  $date_regexp = '/\d{4}-\d{2}-\d{2} \d{2}:\d{2}/';  //TO-DO allow for this to be set for dates:  full, including time, to just year. (3 options)
   
   if (!preg_match($date_regexp, $form_state['values']['start_date'])) {
 		form_set_error('event_start', t('You must enter a start date in the form (YYYY-MM-DD HH:MM) e.g. 2010-11-04 15:58.'));

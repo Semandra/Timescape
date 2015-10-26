@@ -58,11 +58,12 @@
 #NavText a {
 	padding: 10px 20px;
 }
+/* TODO --- remove the need to hide the icons*/
 #Timescape_timeline .timeline-event-icon {
-
+	display: none;
 }
 #Timescape_timeline .timeline-event-tape {
-	min-width: 8px;
+	/*min-width: 8px;*/
 }
 
 #Timescape_timeline .timeline-event-tape, .timeline-small-event-tape, .timeline-small-event-icon  {

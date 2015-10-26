@@ -31,12 +31,10 @@ function Timescape_onLoad(XML_source, target_id) {
   theme.event.instant.impreciseOpacity = 100;
 
   var eventSource = new Timeline.DefaultEventSource();
-  var d = Timeline.DateTime.parseGregorianDateTime("2015");
+  //var d = Timeline.DateTime.parseGregorianDateTime("2015"); // Depreciated -- now set in admin
 
 
   var bandInfos = [
- 
-  
   // Main timeline band where data points are presented in detail
     Timeline.createBandInfo({
       width:          "90%",  //Sets the height of the display band relative to the size of the box height
@@ -44,6 +42,7 @@ function Timescape_onLoad(XML_source, target_id) {
       intervalUnit:   Timeline.DateTime.YEAR, 
       intervalPixels: 100,
 	  trackHeight: 900,
+	  direction: Timeline.FORWARD,
 	  date:           d,
 	  theme:          theme, // Apply the theme variables as set above for data points
       timeZone:       3
@@ -60,9 +59,13 @@ function Timescape_onLoad(XML_source, target_id) {
   ];
   bandInfos[1].syncWith = 0;
   bandInfos[1].highlight = true;
-  tl = Timeline.create(document.getElementById(target_id), bandInfos);
- Timeline.loadXML(XML_source, function(xml, url) { eventSource.loadXML(xml, url); }); // Original
- // Timeline.loadJSON(XML_source, function(xml, url) { eventSource.loadJSON(xml, url); }); //Semandra - parse JSON data instead of XML 
+  tl = Timeline.create(document.getElementById(target_id), bandInfos);  
+  //Timeline.loadXML(XML_source, function(xml, url) { eventSource.loadXML(xml, url); }); // Original
+  Timeline.loadJSON(XML_source, function(json, url) { 
+  		eventSource.loadJSON(json, url); 
+	}); //Semandra - parse JSON data instead of XML 
   
-
+	// Could more than one source be joined together before the rendering of the timeline?
+	// Files would need to be in the same format -- database items and uploaded file could work
+	// could a view create a JSON page which could also be added to the mix?
 }
