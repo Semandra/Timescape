@@ -29,14 +29,21 @@
 */
 function Timescape_init() {
   include_once(drupal_get_path('module', 'Timescape') . '/Timescape.inc');
-  drupal_add_css(drupal_get_path('module', 'Timescape') . '/Timescape.css');
+  
+  
+  
   // Load Timeline 2.3.0 javascripts
   // Excplicitly load the ajax api to avoid load on the timeline server
   drupal_add_js('Timeline_ajax_url="' . drupal_get_path('module', 'Timescape') . '/timeline_2.3.0/timeline_ajax/simile-ajax-api.js";
                  Timeline_urlPrefix="' . drupal_get_path('module', 'Timescape') . '/timeline_2.3.0/timeline_js/";       
                  Timeline_parameters="bundle=true";', 
                 array('type' => 'inline',));
-  drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_2.3.0/timeline_js/timeline-api.js');
+ // drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_2.3.0/timeline_js/timeline-api.js');
+ 
+ drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timeline-api-cust.js'); //Semandra -- cut out ajax loading of css for customization
+ drupal_add_css(drupal_get_path('module', 'Timescape') . '/timeline_2.3.0/timeline_js/timeline-bundle.css'); //load simile css through Drupal
+ drupal_add_css(drupal_get_path('module', 'Timescape') . '/css/timescape-timeline.css'); //load customizations for timeline
+ 
   // Load datetimepicker functions and css for the input form
   //drupal_add_js(drupal_get_path('module', 'Timescape') . '/anytime/anytimec.js');
   //drupal_add_css(drupal_get_path('module', 'Timescape') . '/anytime/anytimec.css');
@@ -46,11 +53,13 @@ function Timescape_init() {
   drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timescape-theme.js');
   drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timescape-original-painter.js');
   drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/simile-patch.js');
-  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/Timescape.js');
+ // drupal_add_css(drupal_get_path('module', 'Timescape') . '/Timescape.css');
+  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timescape.js');
   // Load http://momentjs.com/ to easily format dates
   drupal_add_js(drupal_get_path('module', 'Timescape') . '/moment.js'); // Assists with date formatting 
   // Initialize the timeline javascript with another javascript function
   drupal_add_js(Timescape_jQuery(), 'inline'); // Adds execution code for on document load + setup/customization variables from admin
+  
 }
 
 /** 
@@ -132,6 +141,21 @@ function Timescape_permission(){
  *   A drupal form formatted by system_settings_form().
 */
 function Timescape_admin(){
+  	
+	// Manage timeline categories (display view)
+	$categories = array();
+	$categoriesList = "<ul>";
+	$results = db_select('timescape_event','t')
+											 ->distinct()
+                       ->fields('t', array('category'))
+                       ->execute();
+	while ($result = $results->fetchAssoc()) {
+		$categories[$result['category']] = $result['category'];
+		$categoriesList .= "<li>" . $result['category'] . "</li>";
+	}
+	$categories['other'] = 'Other';
+  	$categoriesList .= "<ul>";
+  
   $form = array(
  //   '#type' => 'fieldset',  //Semandra --- tried this but didn't work
   //  '#title' => t('Name'),   //Semandra
@@ -153,17 +177,49 @@ function Timescape_admin(){
 	'#description' => t('Optional. Note: Entries will not be editable from the timeline. See <a href="#">JSON format</a>'),
     '#default_value' => variable_get('ts_linked_file_path', ''),
   );
-  $form['wolftest'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Text Test'),
-	'#default_value' => variable_get('wolftest', ''),
-  );
-  $form['center_year'] = array(
+/*  $form['ts_categories'] = array(
+    '#type' => 'select',
+    '#title' => t('Timeline Categories'),
+	'#default_value' => variable_get('ts_categories', ''),
+  );*/
+/*  $form['category'] = 
+    array('#type' => 'select',
+    '#id' => 'timescape_category',
+    '#title' => t('Category'),
+    '#options' => $categories,
+    '#description' => t("Categories for Events."),
+    '#required' => FALSE,
+    '#default_value' => $values['category'],
+    );*/
+  $form['category_other'] = 
+    array('#type' => 'textfield',
+	'#title' => t('Event Categories'),
+    '#prefix' => '<div id="timescape_other">',
+	'#field_prefix' =>  $categoriesList,
+    '#suffix' => '</div>',
+    '#size' => 30,
+    '#maxlength' => 50,
+	'#required' => FALSE,
+    '#description' => t("Create new category"),
+    //'#default_value' => $values['category']
+    );
+  
+  // ----- Timeline Settings Group ----------
+  $form['ts_settings_group'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Timeline Settings'),
+	 '#collapsible' => TRUE,
+	 '#collapsed' => FALSE,
+  ); 
+  
+  $form['ts_settings_group']['ts_center_year'] = array(
     '#type' => 'textfield',
 	'#size' => '10',
     '#title' => t('Center timeline on year (Format: YYYY) '),
-	'#default_value' => variable_get('center_year', ''),
+	'#default_value' => variable_get('ts_center_year', ''),
   );
+  
+  // ----- Bubble Group ----------
   $form['ts_bubble_group'] = array(
     '#type' => 'fieldset',
     '#title' => t('Bubble Display'),
@@ -171,17 +227,35 @@ function Timescape_admin(){
 	 '#collapsed' => FALSE,
   );  
   
+  // TODO --- Show Title?
+  
+  // TODO -- Show Category?
+  
+  
   $form['ts_bubble_group']['ts_show_all_dates'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display full dates '),
 	'#default_value' => variable_get('ts_show_all_dates', true),
   );
+  $form['ts_bubble_group']['ts_date_format'] = array(
+    '#type' => 'radios',
+    '#title' => t('Dateformat '),
+	'#options' => array(
+		'MDY' => t('Month Day, Year (e.g. May 3rd, 2015)'),
+		'ymd' => t('Year-Month-Day (e.g. 2011-08-05)'),
+		'dmy' => t('Day/Month/Year (e.g. 04/09/2010)'),
+		),
+	'#default_value' => variable_get('ts_date_format', true),
+  );
+  
   $form['ts_bubble_group']['ts_event_date_summary'] = array(
     '#type' => 'checkbox',
     '#title' => t('Show date summary line'),
 	'#default_value' => variable_get('ts_event_date_summary', false),
   );
   
+ 
+	
 	return system_settings_form($form);
 }
 
@@ -307,7 +381,7 @@ function Timescape_view() {
 	$page_content  = '';
   $page_content .= '<div id="Timescape">';
 	if (user_access('edit Timescape')) {
-		$page_content .= '<p style="text-align: right;"><a href="?q=timescape/edit" style="font-size: 18px">+ ADD NEW</a> - Or click on event to edit/delete.</p><h1>' . variable_get('wolftest','hello') . '</h1>';
+		$page_content .= '<p style="text-align: right;"><a href="?q=timescape/edit" style="font-size: 18px">+ ADD NEW</a> - Or click on event to edit/delete.</p><h1>';
 	}
 	/*$page_content .=  '<div id="timelineLegend">
         <div id="timelineCategories">

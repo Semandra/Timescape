@@ -95,7 +95,7 @@ function Timescape_jQuery() {
 	function centerTimeline(year) {
 	  tl.getBand(0).setCenterVisibleDate(new Date(year, 0, 1));
   };
-   var d = Timeline.DateTime.parseGregorianDateTime('" . variable_get('center_year', '1900') . "');
+   var d = Timeline.DateTime.parseGregorianDateTime('" . variable_get('ts_center_year', '1900') . "');
   ";
   return $script;
 }
@@ -163,36 +163,59 @@ function Timescape_XML() {
   exit(0);
 }
 
+
+/**
+ * Formats dates for bubble output
+ *
+*/
+function Date_formatter ($dateString, $dFormat){
+	$date = new DateTime($dateString);
+	if ($dFormat == 'MDY') {
+		return $date->format('F jS, Y');
+	}
+	if ($dFormat == 'ymd') {
+		return $date->format('Y-m-d');
+	}
+	return $date->format('d/m/Y');
+}
+
+
 /**
  * Generates timeline JSON from Timescape_event table
  *
  * Uses the php DOM functions to generate JSON from databases and static
  * content. This function does not return a drupal formatted page but an
  * JSON-file formatted as an attachment.
+ * 
+ * General styles based on setting is set in function...??
  *
 */
 function Timescape_JSON($var = NULL) {
 	$events = _Timescape_load();
 	//$var = $events;
 	$var = array('events'=>[]);
+	$dFormat = variable_get('ts_date_format');
 	
-
+	//if (variable_get('ts_show_title')){
+			//if 'false' add custom styles to hide div.timeline-event-bubble-title
+	//}
 
 	foreach ($events as $event) {
-		//format information [body in popup bubble] using information fields
+		//format information [text in popup bubble] using information fields
 		$information = '';
 		
-		$information = "<h1>" . $event['name'] . "</h1>";
-		//$information .= "<pre>" . $json_response . "</pre>";
-		
+		//if (variable_get('ts_show_image')){
+			//$information .= "<img src='" variable_get('ts_image_path') . "'>" . $event['image'] . "</h1>";
+		//}
+
 		$information .= $event['comments'];
-		$information .= "<span class='tinybutton'> " . l(t('Edit'), 'timescape/edit/' . $event['id']) . " </span>";
-		$information .= "<span class='tinybutton'> " . l(t('Delete'), 'timescape/delete/' . $event['id']) . " </span>";
-		
+	
 		if (variable_get('ts_show_all_dates')){
-			$information .= "<div>";
-			$information .= "<span class='full-event-date'> " . $event['start_date'] . " </span>";
-			$information .= "<span class='full-event-date'> " . $event['end_date'] . " </span>";
+			$information .= "<div id='dateRange'>";
+			$information .= "<span class='full-event-date'> " . Date_formatter($event['start_date'],$dFormat) . " </span>";
+			if ($event['start_date'] != $event['end_date']) {
+				$information .= " to <span class='full-event-date'> " . Date_formatter($event['end_date'],$dFormat) . " </span>";
+			}
 			$information .= "</div>";
 		}
 		if (variable_get('ts_event_date_summary')){
@@ -205,6 +228,13 @@ function Timescape_JSON($var = NULL) {
 		//	$information .= "<p class='event-date-summary'> " . $event['created_by'] . " </p>";
 		}
 		
+		//if (variable_get('ts_show_link')){
+		//	$information .= "<a href='" . $event['link'] . "'></h1>";
+		//}
+		
+		//********--TODO -- Show only to those with admin privledges
+			$information .= "<div id='evntEdtBtns'><span class='tinybutton'> " . l(t('Edit'), 'timescape/edit/' . $event['id']) . " </span>";
+			$information .= "<span class='tinybutton'> " . l(t('Delete'), 'timescape/delete/' . $event['id']) . " </span></div>";
 		
 		$node['description'] =  $information;
 		
@@ -237,7 +267,7 @@ function Timescape_JSON($var = NULL) {
 		foreach ($json_response as $response_data) {
 			
 			$information = '';
-			$information .= "<h1>" . $response_data['title'] . "</h1>";
+			//$information .= "<h1>" . $response_data['title'] . "</h1>";
 			
 			if (variable_get('ts_show_all_dates')){
 				$information .= "<div>";
@@ -259,7 +289,7 @@ function Timescape_JSON($var = NULL) {
 	
 	
 	// We are returning JSON, so tell the browser.
-  drupal_add_http_header('Content-Type', 'application/json');
+ 	 drupal_add_http_header('Content-Type', 'application/json');
 
   if (isset($var)) {
     echo drupal_json_encode($var);
@@ -408,7 +438,7 @@ function _Timescape_Input($form, &$form_state, $values) {
     '#required' => FALSE,
     '#default_value' => $values['category'],
     );
-  $form['category_other'] = 
+/*  $form['category_other'] = 
     array('#type' => 'textfield',
     '#prefix' => '<div id="timescape_other">',
     '#suffix' => '</div>',
@@ -417,7 +447,7 @@ function _Timescape_Input($form, &$form_state, $values) {
 	'#required' => FALSE,
     '#description' => t("Create new category (required for first event). Select 'other' from category to create a new category name."),
     '#default_value' => $values['category']
-    );
+    );*/
   $form['comments'] = 
     array('#type' => 'textarea',
     '#title' => t('Details of Event'),

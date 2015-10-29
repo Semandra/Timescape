@@ -5,5 +5,5 @@ version = "7.x-0.5"
 core = 7.x
 files[] = Timescape.module
 files[] = Timescape.inc
-stylesheets[all][] =  Timescape.css
+stylesheets[all][] =  timescape.css
 configure = admin/config/content/Timescape
