@@ -7,7 +7,7 @@
 	"start": "1916-11-23", *Manditory (Simile) - timeline date
 	"end": "1916-11-23", (simile) If not explicitly set (only start) then it is added by import by Timescape
     "lateStrt": false, Optional to add uncertainty (formatting)
-    "erlEnd": false, Optional to add uncertainty (formatting)
+    "erlyEnd": false, Optional to add uncertainty (formatting)
      
     "durationEvent": false, // (simile) true means that an event happened between times, 
 								if false means that it occured somewhere between times

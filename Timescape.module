@@ -150,26 +150,26 @@ function Timescape_permission(){
  *   A drupal form formatted by system_settings_form().
 */
 function Timescape_admin($form, &$form_state){
-  	
+  	$i = 0;
 	// Manage timeline categories (display view)
-	$categories = array();
-	$categoriesList = "<ul>";
+	$ts_categories = array();
+	$ts_categoriesList = "<ul>";
 	$results = db_select('timescape_event','t')
 											 ->distinct()
                        ->fields('t', array('category'))
                        ->execute();
 	while ($result = $results->fetchAssoc()) {
-		$categories[$result['category']] = $result['category'];
-		$categoriesList .= "<li>" . $result['category'] . "</li>";
+		$ts_categories[$result['category']] = $result['category'];
+		$ts_categoriesList .= "<li>" . $result['category'] . "</li>";
 	}
-	$categories['other'] = 'Other';
-  	$categoriesList .= "<ul>";
+	$ts_categories['other'] = 'Other';
+  	$ts_categoriesList .= "<ul>";
+	
+	variable_set('ts_categories', $ts_categories);
   
   $form = array(
  //   '#type' => 'fieldset',  //Semandra --- tried this but didn't work
   //  '#title' => t('Name'),   //Semandra
-  
-  
   );
   // ------------ Data Group ----------------
   $form['ts_data_group'] = array(
@@ -211,7 +211,7 @@ function Timescape_admin($form, &$form_state){
     array('#type' => 'textfield',
 	'#title' => t('Event Categories'),
     '#prefix' => '<div id="timescape_other">',
-	'#field_prefix' =>  $categoriesList,
+	'#field_prefix' =>  $ts_categoriesList,
     '#suffix' => '</div>',
     '#size' => 30,
     '#maxlength' => 50,
@@ -275,7 +275,7 @@ function Timescape_admin($form, &$form_state){
     '#type' => 'fieldset',
     '#title' => t('Timeline Styles'),
 	 '#collapsible' => TRUE,
-	 '#collapsed' => TRUE,
+	 '#collapsed' => FALSE,
   ); 
     $form['ts_style_group']['ts_timeline_border'] = array(
     '#type' => 'textfield',
@@ -331,12 +331,37 @@ function Timescape_admin($form, &$form_state){
 		  );
 		
 		  $form_state['storage']['participants']++;*/
+		  
+		$form['ts_style_group']['ts_evt_style_table'] = array(
+			'#type' => 'fieldset',
+			'#title' => t('Event Tape Styles'),
+			'#prefix' => '<table><tr><th>Category Name</th><th>Primary Colour</th><th></th><th>Secondary Colour</th><th></th></tr>',
+			'#suffix' => '</table>',
+			 '#collapsible' => FALSE,
+			 '#collapsed' => FALSE,
+		  ); 
 	
-		foreach ($categories as $category){
-			$form['catstyle_' . $category] = array(
-			'#title' => t('Category '. $category),
+		foreach ($ts_categories as $ts_category){
+			$form['ts_style_group']['ts_evt_style_table']['ts_color_p_' . $ts_category] = array(
+			//$form['ts_style_group']['ts_evt_style_table'][$i]['ts_color_p'] = array(
+			//'#title' => t($category),
+			'#prefix' => '<tr><td>' . $ts_category . "</td><td>",
+			'#suffix' => '</td><td><div style="height:20px;width:20px;background-color:'. variable_get('ts_color_p_' . $ts_category, '') .'"></div></td>',
+			//'#suffix' => '</td><td><div style="height:20px;width:20px;background-color:'. variable_get('ts_color_p') .'"></div></td>',
 			'#type' => 'textfield',
+			'#size' => '20',
+			'#default_value' => variable_get('ts_color_p_' . $ts_category, '#205092'),
+			//'#default_value' => variable_get('ts_color_p', ''),
 		  );
+		  $form['ts_style_group']['ts_evt_style_table']['ts_color_s_' . $ts_category] = array(
+			//'#title' => t($category),
+			'#prefix' => '<td>',
+			'#suffix' => '</td><td><div style="height:20px;width:20px;background-color:'. variable_get('ts_color_s_' . $ts_category, '') .'"></div></td>',
+			'#type' => 'textfield',
+			'#size' => '20',
+			'#default_value' => variable_get('ts_color_s_' . $ts_category, '#A1C0EA'),
+		  );
+		  $i++;
 		}
 	
 	

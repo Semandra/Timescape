@@ -106,72 +106,85 @@ function Timescape_jQuery() {
 */
 
 function Timescape_CSS($cusCss = NULL) {
+	$ts_categories = (variable_get('ts_categories', array()));
 	
-	$evt_color = variable_get('ts_timeline_event_colors');
-	$evt_color_band = "#ffccdd";
+	//$bg_color_prm = variable_get('ts_timeline_event_colors');
+	//$bg_color_scd = variable_get('ts_timeline_event_colors');
+	//$font-size = variable_get('ts_timeline_event_colors');
+	//$font = variable_get('ts_timeline_event_colors');
+	$cusCss = "#Timescape .Timescape_active {
+					border:" . variable_get('ts_timeline_border') . ";
+					}";
 	
-	$cusCss = "#Timescape .Timescape_active {border:" . variable_get('ts_timeline_border') . ";}";
-	$cusCss .= ".timeline-small-event-tape {
-					background-color: ". $evt_color .";
-				}";
-
-	$cusCss .= ".timeline-event-tape.tapeLayer0, .timeline-event-tape.tapeLayer1  {
-					background-color: ". $evt_color_band .";
-					background-image: radial-gradient(closest-side, transparent 80%, rgba(256,256,256,1) 100%), radial-gradient(closest-side, transparent 100%, rgba(256,256,256,1) 100%);
-					background-size:8px 8px;
-					background-position:0 0;
-					border-radius: 5px;
-					border-width: 5px;
-				}";
-
-	$cusCss .= ".timeline-event-tape.tapeLayer1.startKnown {
+	
+	// Create styles for each of the categories
+	foreach ($ts_categories as $ts_category){
+		$evt_color = variable_get('ts_color_p_' . $ts_category, '');
+		$evt_color_band = variable_get('ts_color_s_' . $ts_category, '');
+		
+		
+		$cusCss .= ".timeline-small-event-tape." . $ts_category . "_event {
+						background-color: ". $evt_color .";
+					}";
+	
+		$cusCss .= ".timeline-event-tape.tapeLayer0." . $ts_category . "_event , .timeline-event-tape.tapeLayer1." . $ts_category . "_event  {
+						background-color: ". $evt_color_band .";
+						background-image: radial-gradient(closest-side, transparent 80%, rgba(256,256,256,1) 100%), radial-gradient(closest-side, transparent 100%, rgba(256,256,256,1) 100%);
+						background-size:8px 8px;
+						background-position:0 0;
+						border-radius: 5px;
+						border-width: 5px;
+					}";
+	
+		$cusCss .= ".timeline-event-tape.tapeLayer1.startKnown." . $ts_category . "_event {
+						border-left: solid 5px ". $evt_color .";
+						border-right: none;
+						border-radius: 5px;
+					}";
+		$cusCss .= ".timeline-event-tape.tapeLayer0.startKnown.endKnown." . $ts_category . "_event {
+						border-left: solid 5px ". $evt_color .";
+						border-right: solid 5px ". $evt_color .";
+					}";
+		$cusCss .= ".timeline-event-tape.tapeLayer1.endKnown." . $ts_category . "_event  {
+						border-right: solid 5px ". $evt_color .";
+						border-left: none;
+					}";
+	
+				/*  Single Event - from a date to a date */
+		$cusCss .= "	.timeline-event-tape.tapeLayer0.singleDateEvent.between." . $ts_category . "_event  {
+						background-color: ". $evt_color_band .";
+						background-image: radial-gradient(closest-side, transparent 80%, rgba(256,256,256,1) 100%), radial-gradient(closest-side, transparent 100%, rgba(256,256,256,1) 100%);
+				}
+				.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown." . $ts_category . "_event   {
 					border-left: solid 5px ". $evt_color .";
 					border-right: none;
-					border-radius: 5px;
-				}";
-	$cusCss .= ".timeline-event-tape.tapeLayer0.startKnown.endKnown {
+				}
+				 .timeline-event-tape.tapeLayer0.singleDateEvent.between.endKnown." . $ts_category . "_event   {
+					border-right: solid 5px ". $evt_color .";
+					border-left: none;	
+				}
+				.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown." . $ts_category . "_event   {
 					border-left: solid 5px ". $evt_color .";
 					border-right: solid 5px ". $evt_color .";
 				}";
-	$cusCss .= ".timeline-event-tape.tapeLayer1.endKnown  {
-					border-right: solid 5px ". $evt_color .";
-					border-left: none;
+				
+				/*  Single Event - single date */
+			$cusCss .= "	 .timeline-event-tape.tapeLayer0.singleDateEvent." . $ts_category . "_event   {
+				
+				}
+				 .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown." . $ts_category . "_event   {
+					border-left: solid 4px ". $evt_color .";
+					border-right: none;
+				}
+				 .timeline-event-tape.tapeLayer0.singleDateEvent.endKnown." . $ts_category . "_event   {
+					border-right: solid 4px ". $evt_color .";
+					border-left: none;	
+				}
+				 .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.endKnown." . $ts_category . "_event , .timeline-event-tape.tapeLayer1.startKnown.endKnown." . $ts_category . "_event  {
+					border-left: solid 4px ". $evt_color .";
+					border-right: solid 4px ". $evt_color .";
 				}";
-
-/*  Single Event - from a date to a date */
-/*.timeline-event-tape.tapeLayer0.singleDateEvent.between  {
-	background-image: url(images/dp-blue-bg.png);
-}
-.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown  {
-	border-left: solid 5px #205092 ;
-	border-right: none;
-}
- .timeline-event-tape.tapeLayer0.singleDateEvent.between.endKnown  {
-	border-right: solid 5px #205092 ;
-	border-left: none;	
-}
-.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown  {
-	border-left: solid 5px #205092 ;
-	border-right: solid 5px #205092 ;
-}*/
-
-/*  Single Event - single date */
-/* .timeline-event-tape.tapeLayer0.singleDateEvent  {
-
-}
- .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown  {
-	border-left: solid 4px #205092 ;
-	border-right: none;
-}
- .timeline-event-tape.tapeLayer0.singleDateEvent.endKnown  {
-	border-right: solid 4px #205092 ;
-	border-left: none;	
-}
- .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.endKnown, .timeline-event-tape.tapeLayer1.startKnown.endKnown {
-	border-left: solid 4px #205092 ;
-	border-right: solid 4px #205092 ;
-}*/
-
+			};
 
 
  	 drupal_add_http_header('Content-Type', 'text/css');
@@ -288,7 +301,7 @@ function Timescape_JSON($var = NULL) {
 		//if (variable_get('ts_show_image')){
 			//$information .= "<img src='" variable_get('ts_image_path') . "'>" . $event['image'] . "</h1>";
 		//}
-
+		$information .= "<p class='event-category'> " . $event['category'] . " </p>";
 		$information .= $event['comments'];
 	
 		if (variable_get('ts_show_all_dates')){
@@ -333,7 +346,7 @@ function Timescape_JSON($var = NULL) {
 		
 		// EVENT POINT STYLING
 		// depending on the category, supply the appropriate classes
-		$node['class'] = "startKnown letter_event"; //$event['name'];
+		$node['classname'] = "startKnown endKnown " . $event['category'] . "_event "; //$event['name'];
 		
 		array_push($var['events'], $node); 
 	}
@@ -519,7 +532,7 @@ function _Timescape_Input($form, &$form_state, $values) {
     '#required' => FALSE,
     '#default_value' => $values['category'],
     );
-/*  $form['category_other'] = 
+  $form['category_other'] = 
     array('#type' => 'textfield',
     '#prefix' => '<div id="timescape_other">',
     '#suffix' => '</div>',
@@ -528,7 +541,7 @@ function _Timescape_Input($form, &$form_state, $values) {
 	'#required' => FALSE,
     '#description' => t("Create new category (required for first event). Select 'other' from category to create a new category name."),
     '#default_value' => $values['category']
-    );*/
+    );
   $form['comments'] = 
     array('#type' => 'textarea',
     '#title' => t('Details of Event'),
