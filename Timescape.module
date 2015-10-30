@@ -30,8 +30,14 @@
 function Timescape_init() {
   include_once(drupal_get_path('module', 'Timescape') . '/Timescape.inc');
   
+  $options = array (
+  	'type' => 'external',
+	'every_page' => false
+  );
   
   
+//TODO -- Only load this javascript and css if on the timeline page??
+
   // Load Timeline 2.3.0 javascripts
   // Excplicitly load the ajax api to avoid load on the timeline server
   drupal_add_js('Timeline_ajax_url="' . drupal_get_path('module', 'Timescape') . '/timeline_2.3.0/timeline_ajax/simile-ajax-api.js";
@@ -43,6 +49,8 @@ function Timescape_init() {
  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timeline-api-cust.js'); //Semandra -- cut out ajax loading of css for customization
  drupal_add_css(drupal_get_path('module', 'Timescape') . '/timeline_2.3.0/timeline_js/timeline-bundle.css'); //load simile css through Drupal
  drupal_add_css(drupal_get_path('module', 'Timescape') . '/css/timescape-timeline.css'); //load customizations for timeline
+ drupal_add_css('http://localhost:8888/testDrupal/timescape/css', $options); // TODO - Is this the best way to do this?
+ //drupal_add_css(drupal_get_path('module', 'Timescape') . '/css/test.css'); 
  
   // Load datetimepicker functions and css for the input form
   //drupal_add_js(drupal_get_path('module', 'Timescape') . '/anytime/anytimec.js');
@@ -60,6 +68,7 @@ function Timescape_init() {
   // Initialize the timeline javascript with another javascript function
   drupal_add_js(Timescape_jQuery(), 'inline'); // Adds execution code for on document load + setup/customization variables from admin
   
+  //drupal_add_css(Timescape_customCss(), 'inline');
 }
 
 /** 
@@ -140,7 +149,7 @@ function Timescape_permission(){
  * @return array $form
  *   A drupal form formatted by system_settings_form().
 */
-function Timescape_admin(){
+function Timescape_admin($form, &$form_state){
   	
 	// Manage timeline categories (display view)
 	$categories = array();
@@ -162,7 +171,14 @@ function Timescape_admin(){
   
   
   );
-  $form['data_source_type'] = array(
+  // ------------ Data Group ----------------
+  $form['ts_data_group'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Timeline Data'),
+	 '#collapsible' => TRUE,
+	 '#collapsed' => TRUE,
+  );  
+  $form['ts_data_group']['data_source_type'] = array(
     '#type' => 'radios',
     '#title' => t('Data Type!'),
     '#options' => array(
@@ -171,7 +187,7 @@ function Timescape_admin(){
     ),
     '#default_value' => variable_get('data_source_type', 'drupal'),
   );
-  $form['ts_linked_file_path'] = array(
+  $form['ts_data_group']['ts_linked_file_path'] = array(
     '#type' => 'textfield',
     '#title' => t('URL link to JSON file'),
 	'#description' => t('Optional. Note: Entries will not be editable from the timeline. See <a href="#">JSON format</a>'),
@@ -191,7 +207,7 @@ function Timescape_admin(){
     '#required' => FALSE,
     '#default_value' => $values['category'],
     );*/
-  $form['category_other'] = 
+  $form['ts_data_group']['category_other'] = 
     array('#type' => 'textfield',
 	'#title' => t('Event Categories'),
     '#prefix' => '<div id="timescape_other">',
@@ -209,7 +225,7 @@ function Timescape_admin(){
     '#type' => 'fieldset',
     '#title' => t('Timeline Settings'),
 	 '#collapsible' => TRUE,
-	 '#collapsed' => FALSE,
+	 '#collapsed' => TRUE,
   ); 
   
   $form['ts_settings_group']['ts_center_year'] = array(
@@ -224,7 +240,7 @@ function Timescape_admin(){
     '#type' => 'fieldset',
     '#title' => t('Bubble Display'),
 	 '#collapsible' => TRUE,
-	 '#collapsed' => FALSE,
+	 '#collapsed' => TRUE,
   );  
   
   // TODO --- Show Title?
@@ -254,9 +270,81 @@ function Timescape_admin(){
 	'#default_value' => variable_get('ts_event_date_summary', false),
   );
   
- 
+  // ----- Timeline Style Group ----------
+  $form['ts_style_group'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Timeline Styles'),
+	 '#collapsible' => TRUE,
+	 '#collapsed' => TRUE,
+  ); 
+    $form['ts_style_group']['ts_timeline_border'] = array(
+    '#type' => 'textfield',
+	'#size' => '20',
+    '#title' => t('Styles for Timeline Border (e.g. 1px solid #ff0000) '),
+	'#default_value' => variable_get('ts_timeline_border', ''),
+  );
+	$form['ts_style_group']['ts_timeline_event_colors'] = array(
+    '#type' => 'textfield',
+	'#size' => '20',
+    '#title' => t('Colour test for styles (e.g. #ff0000) '),
+	'#default_value' => variable_get('ts_timeline_event_colors', 'green'),
+  );
+	
+	// =============== MULTIPLE SELECTION FIELD =====================
+/*		  $form_state['storage']['participants'] =
+			isset($form_state['storage']['participants']) ? $form_state['storage']['participants'] : 0;
+		
+		  $form['name'] = array(
+			'#title' => t('Name'),
+			'#type' => 'textfield',
+		  );
+		
+		  $form['participants'] = array(
+			'#type' => 'container',
+			'#tree' => TRUE,
+			'#prefix' => '<div id="participants">',
+			'#suffix' => '</div>',
+		  );
+			
+		  if ($form_state['storage']['participants']) {
+			for ($i = 1; $i <= $form_state['storage']['participants']; $i++) {
+			  $form['participants'][$i] = array(
+				'#type' => 'fieldset',
+				'#tree' => TRUE,
+			  );
+		
+			  $form['participants'][$i]['name'] = array(
+				'#title' => t('Name'),
+				'#type' => 'textfield',
+			  );
+			}
+		  }
+		
+		  $form['add_participant'] = array(
+			'#type' => 'button',
+			'#value' => t('Add'),
+			'#href' => '',
+			'#ajax' => array(
+			'callback' => 'custom_registration_ajax_add_participant',
+			'wrapper' => 'participants',
+		   ),
+		  );
+		
+		  $form_state['storage']['participants']++;*/
+	
+		foreach ($categories as $category){
+			$form['catstyle_' . $category] = array(
+			'#title' => t('Category '. $category),
+			'#type' => 'textfield',
+		  );
+		}
+	
 	
 	return system_settings_form($form);
+}
+
+function custom_registration_ajax_add_participant($form, $form_state) {
+  return $form['participants'];
 }
 
 /**
@@ -291,6 +379,11 @@ function Timescape_menu() {
 	  );
 	$items['timescape/json'] =
     array('page callback' => 'Timescape_JSON',
+	  'access arguments' => array('access Timescape'),
+	  'type' => MENU_CALLBACK,
+	  );
+	$items['timescape/css'] =
+    array('page callback' => 'Timescape_CSS',
 	  'access arguments' => array('access Timescape'),
 	  'type' => MENU_CALLBACK,
 	  );

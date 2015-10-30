@@ -101,6 +101,88 @@ function Timescape_jQuery() {
 }
 
 /**
+ * Creates custom styles for timeline from Module settings
+ *
+*/
+
+function Timescape_CSS($cusCss = NULL) {
+	
+	$evt_color = variable_get('ts_timeline_event_colors');
+	$evt_color_band = "#ffccdd";
+	
+	$cusCss = "#Timescape .Timescape_active {border:" . variable_get('ts_timeline_border') . ";}";
+	$cusCss .= ".timeline-small-event-tape {
+					background-color: ". $evt_color .";
+				}";
+
+	$cusCss .= ".timeline-event-tape.tapeLayer0, .timeline-event-tape.tapeLayer1  {
+					background-color: ". $evt_color_band .";
+					background-image: radial-gradient(closest-side, transparent 80%, rgba(256,256,256,1) 100%), radial-gradient(closest-side, transparent 100%, rgba(256,256,256,1) 100%);
+					background-size:8px 8px;
+					background-position:0 0;
+					border-radius: 5px;
+					border-width: 5px;
+				}";
+
+	$cusCss .= ".timeline-event-tape.tapeLayer1.startKnown {
+					border-left: solid 5px ". $evt_color .";
+					border-right: none;
+					border-radius: 5px;
+				}";
+	$cusCss .= ".timeline-event-tape.tapeLayer0.startKnown.endKnown {
+					border-left: solid 5px ". $evt_color .";
+					border-right: solid 5px ". $evt_color .";
+				}";
+	$cusCss .= ".timeline-event-tape.tapeLayer1.endKnown  {
+					border-right: solid 5px ". $evt_color .";
+					border-left: none;
+				}";
+
+/*  Single Event - from a date to a date */
+/*.timeline-event-tape.tapeLayer0.singleDateEvent.between  {
+	background-image: url(images/dp-blue-bg.png);
+}
+.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown  {
+	border-left: solid 5px #205092 ;
+	border-right: none;
+}
+ .timeline-event-tape.tapeLayer0.singleDateEvent.between.endKnown  {
+	border-right: solid 5px #205092 ;
+	border-left: none;	
+}
+.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown  {
+	border-left: solid 5px #205092 ;
+	border-right: solid 5px #205092 ;
+}*/
+
+/*  Single Event - single date */
+/* .timeline-event-tape.tapeLayer0.singleDateEvent  {
+
+}
+ .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown  {
+	border-left: solid 4px #205092 ;
+	border-right: none;
+}
+ .timeline-event-tape.tapeLayer0.singleDateEvent.endKnown  {
+	border-right: solid 4px #205092 ;
+	border-left: none;	
+}
+ .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.endKnown, .timeline-event-tape.tapeLayer1.startKnown.endKnown {
+	border-left: solid 4px #205092 ;
+	border-right: solid 4px #205092 ;
+}*/
+
+
+
+ 	 drupal_add_http_header('Content-Type', 'text/css');
+
+  if (isset($cusCss)) {
+    echo $cusCss;
+  }	
+	
+}
+
+/**
  * Generates XML that is used by the timeline
  *
  * Uses the php DOM functions to generate XML from databases and static
@@ -187,7 +269,6 @@ function Date_formatter ($dateString, $dFormat){
  * content. This function does not return a drupal formatted page but an
  * JSON-file formatted as an attachment.
  * 
- * General styles based on setting is set in function...??
  *
 */
 function Timescape_JSON($var = NULL) {
@@ -232,7 +313,7 @@ function Timescape_JSON($var = NULL) {
 		//	$information .= "<a href='" . $event['link'] . "'></h1>";
 		//}
 		
-		//********--TODO -- Show only to those with admin privledges
+//********--TODO -- Show only to those with admin privledges
 			$information .= "<div id='evntEdtBtns'><span class='tinybutton'> " . l(t('Edit'), 'timescape/edit/' . $event['id']) . " </span>";
 			$information .= "<span class='tinybutton'> " . l(t('Delete'), 'timescape/delete/' . $event['id']) . " </span></div>";
 		
