@@ -21,14 +21,14 @@
 var tl;
 
 function Timescape_onLoad(XML_source, target_id) {
-  var theme = Timeline.ClassicTheme.create(); // alter the defaults of the custom theme
-  theme.event.bubble.width = 450;   // modify it
-  theme.event.bubble.height = 400;
-  theme.event.track.height = 30;
-  theme.event.track.gap = 5;
-  theme.event.tape.height = 8;
-  theme.event.duration.impreciseOpacity = 100;
-  theme.event.instant.impreciseOpacity = 100;
+  //var theme = Timeline.ClassicTheme.create(); // alter the defaults of the custom theme
+  //theme.event.bubble.width = 450;   // modify it
+  //theme.event.bubble.height = 400;
+  //theme.event.track.height = 30;
+  //theme.event.track.gap = 5;
+  //theme.event.tape.height = 8;
+  //theme.event.duration.impreciseOpacity = 100;
+  //theme.event.instant.impreciseOpacity = 100;
 
   var eventSource = new Timeline.DefaultEventSource();
   //var d = Timeline.DateTime.parseGregorianDateTime("2015"); // Depreciated -- now set in admin

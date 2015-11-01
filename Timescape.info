@@ -1,7 +1,7 @@
 ; $Id$
 name = Timescape
-description = "Plots and displays information on a timeline."
-version = "7.x-0.5"
+description = "Plots and displays information on a new timeline page."
+version = "7.x-0.8"
 core = 7.x
 files[] = Timescape.module
 files[] = Timescape.inc

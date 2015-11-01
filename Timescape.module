@@ -277,6 +277,12 @@ function Timescape_admin($form, &$form_state){
 	 '#collapsible' => TRUE,
 	 '#collapsed' => FALSE,
   ); 
+  $form['ts_style_group']['ts_tape_height'] = array(
+    '#type' => 'textfield',
+	'#size' => '10',
+    '#title' => t('Tape and Dot Height in pixels (e.g. "10") '),
+	'#default_value' => variable_get('ts_tape_height', '8'),
+  );
     $form['ts_style_group']['ts_timeline_border'] = array(
     '#type' => 'textfield',
 	'#size' => '20',

@@ -96,6 +96,15 @@ function Timescape_jQuery() {
 	  tl.getBand(0).setCenterVisibleDate(new Date(year, 0, 1));
   };
    var d = Timeline.DateTime.parseGregorianDateTime('" . variable_get('ts_center_year', '1900') . "');
+   
+   var theme = Timeline.ClassicTheme.create(); // alter the defaults of the custom theme
+	  theme.event.bubble.width = 450;   // modify it
+	  theme.event.bubble.height = 400;
+	  theme.event.track.height = 30;
+	  theme.event.track.gap = 5;
+	  theme.event.tape.height = " . variable_get('ts_tape_height') . ";
+	  theme.event.duration.impreciseOpacity = 100;
+	  theme.event.instant.impreciseOpacity = 100;
   ";
   return $script;
 }
@@ -107,21 +116,22 @@ function Timescape_jQuery() {
 
 function Timescape_CSS($cusCss = NULL) {
 	$ts_categories = (variable_get('ts_categories', array()));
-	
+	$cusCss = "";
 	//$bg_color_prm = variable_get('ts_timeline_event_colors');
 	//$bg_color_scd = variable_get('ts_timeline_event_colors');
 	//$font-size = variable_get('ts_timeline_event_colors');
 	//$font = variable_get('ts_timeline_event_colors');
-	$cusCss = "#Timescape .Timescape_active {
+
+	$cusCss = (variable_get('ts_timeline_border')) ? "#Timescape .Timescape_active {
 					border:" . variable_get('ts_timeline_border') . ";
-					}";
-	
+					}" : "";
 	
 	// Create styles for each of the categories
 	foreach ($ts_categories as $ts_category){
 		$evt_color = variable_get('ts_color_p_' . $ts_category, '');
 		$evt_color_band = variable_get('ts_color_s_' . $ts_category, '');
-		
+		$tape = variable_get('ts_tape_height');
+		$border = $tape / 2;
 		
 		$cusCss .= ".timeline-small-event-tape." . $ts_category . "_event {
 						background-color: ". $evt_color .";
@@ -129,29 +139,53 @@ function Timescape_CSS($cusCss = NULL) {
 	
 		$cusCss .= ".timeline-event-tape.tapeLayer0." . $ts_category . "_event , .timeline-event-tape.tapeLayer1." . $ts_category . "_event  {
 						background-color: ". $evt_color_band .";
-						background-image: radial-gradient(closest-side, transparent 80%, rgba(256,256,256,1) 100%), radial-gradient(closest-side, transparent 100%, rgba(256,256,256,1) 100%);
-						background-size:8px 8px;
-						background-position:0 0;
-						border-radius: 5px;
-						border-width: 5px;
+						border-radius: ". $border ."px;
+						border-width: ". $border ."px;
+						border-left: solid ". $border ."px ". $evt_color_band .";
+						border-right: solid ". $border ."px ". $evt_color_band .";
 					}";
 	
-		$cusCss .= ".timeline-event-tape.tapeLayer1.startKnown." . $ts_category . "_event {
-						border-left: solid 5px ". $evt_color .";
-						border-right: none;
-						border-radius: 5px;
+		$cusCss .= ".timeline-event-tape.tapeLayer0.startKnown." . $ts_category . "_event {
+						border-left: solid ". $border ."px ". $evt_color .";
+						border-right: solid ". $border ."px ". $evt_color_band .";
+						border-radius: ". $border ."px;
 					}";
 		$cusCss .= ".timeline-event-tape.tapeLayer0.startKnown.endKnown." . $ts_category . "_event {
-						border-left: solid 5px ". $evt_color .";
-						border-right: solid 5px ". $evt_color .";
+						border-left: solid ". $border ."px ". $evt_color .";
+						border-right: solid ". $border ."px ". $evt_color .";
 					}";
-		$cusCss .= ".timeline-event-tape.tapeLayer1.endKnown." . $ts_category . "_event  {
-						border-right: solid 5px ". $evt_color .";
-						border-left: none;
+		$cusCss .= ".timeline-event-tape.tapeLayer0.endKnown." . $ts_category . "_event  {
+						border-right: solid ". $border ."px ". $evt_color .";
+						border-left: solid ". $border ."px ". $evt_color_band .";
 					}";
+					
+					
+			$cusCss .= ".timeline-event-tape.tapeLayer0.between." . $ts_category . "_event , .timeline-event-tape.tapeLayer1.between." . $ts_category . "_event  {
+						background-color: ". $evt_color_band .";
+						background-image: radial-gradient(closest-side, transparent 80%, rgba(256,256,256,1) 100%), radial-gradient(closest-side, transparent 100%, rgba(256,256,256,1) 100%);
+						background-size:". $tape ."px ". $tape ."px;
+						background-position:0 0;
+						border-radius: ". $border ."px;
+						border-left: solid ". $border ."px ". $evt_color_band .";
+						border-right: solid ". $border ."px ". $evt_color_band .";
+					}
+					.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown." . $ts_category . "_event   {
+					border-left: solid ". $border ."px ". $evt_color .";
+					border-right: none;
+					border-right: solid ". $border ."px ". $evt_color_band .";
+				}
+				 .timeline-event-tape.tapeLayer0.singleDateEvent.between.endKnown." . $ts_category . "_event   {
+					border-right: solid ". $border ."px ". $evt_color .";
+					border-left: none;
+					border-left: solid ". $border ."px ". $evt_color_band .";
+				}
+				.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown." . $ts_category . "_event   {
+					border-left: solid ". $border ."px ". $evt_color .";
+					border-right: solid ". $border ."px ". $evt_color .";
+				}";
 	
 				/*  Single Event - from a date to a date */
-		$cusCss .= "	.timeline-event-tape.tapeLayer0.singleDateEvent.between." . $ts_category . "_event  {
+		/*$cusCss .= "	.timeline-event-tape.tapeLayer0.singleDateEvent.between." . $ts_category . "_event  {
 						background-color: ". $evt_color_band .";
 						background-image: radial-gradient(closest-side, transparent 80%, rgba(256,256,256,1) 100%), radial-gradient(closest-side, transparent 100%, rgba(256,256,256,1) 100%);
 				}
@@ -166,10 +200,10 @@ function Timescape_CSS($cusCss = NULL) {
 				.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown." . $ts_category . "_event   {
 					border-left: solid 5px ". $evt_color .";
 					border-right: solid 5px ". $evt_color .";
-				}";
+				}";*/
 				
 				/*  Single Event - single date */
-			$cusCss .= "	 .timeline-event-tape.tapeLayer0.singleDateEvent." . $ts_category . "_event   {
+			/*$cusCss .= "	 .timeline-event-tape.tapeLayer0.singleDateEvent." . $ts_category . "_event   {
 				
 				}
 				 .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown." . $ts_category . "_event   {
@@ -183,7 +217,7 @@ function Timescape_CSS($cusCss = NULL) {
 				 .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.endKnown." . $ts_category . "_event , .timeline-event-tape.tapeLayer1.startKnown.endKnown." . $ts_category . "_event  {
 					border-left: solid 4px ". $evt_color .";
 					border-right: solid 4px ". $evt_color .";
-				}";
+				}";*/
 			};
 
 
@@ -196,23 +230,23 @@ function Timescape_CSS($cusCss = NULL) {
 }
 
 /**
- * Generates XML that is used by the timeline
+ * Generates XML that could used by the timeline
  *
  * Uses the php DOM functions to generate XML from databases and static
  * content. This function does not return a drupal formatted page but an
  * XML-file formatted as an attachment.
  *
 */
-function Timescape_XML() {
+/*function Timescape_XML() {
   drupal_add_http_header('Content-Type', 'text/xml');
   //drupal_add_http_header('Content-Disposition', 'attachment; filename=Timescape.xml;');
   
   $events = _Timescape_load();
   
  // Semandra: Removed this foreach because not using Timescape_DataBridge()
-	/*	foreach (Timescape_DataBridge() as $type) {
-	    $events = array_merge($events, $type);
-		  }*/
+	//	foreach (Timescape_DataBridge() as $type) {
+	 //   $events = array_merge($events, $type);
+	//	  }
   
   // Create the XML
   $dom = new DOMDocument('1.0', 'UTF-8');
@@ -256,7 +290,7 @@ function Timescape_XML() {
   echo $dom->saveXML();
   // Return that we're fine
   exit(0);
-}
+}*/
 
 
 /**
@@ -297,12 +331,10 @@ function Timescape_JSON($var = NULL) {
 	foreach ($events as $event) {
 		//format information [text in popup bubble] using information fields
 		$information = '';
-		
-		//if (variable_get('ts_show_image')){
-			//$information .= "<img src='" variable_get('ts_image_path') . "'>" . $event['image'] . "</h1>";
-		//}
+		$information .= "<p class='sub-title'> " . $event['sub_title'] . " </p>";
 		$information .= "<p class='event-category'> " . $event['category'] . " </p>";
-		$information .= $event['comments'];
+		$information .= "<p class='sub-title'> " . $event['location'] . " </p>";
+		$information .= $event['description'];
 	
 		if (variable_get('ts_show_all_dates')){
 			$information .= "<div id='dateRange'>";
@@ -312,14 +344,21 @@ function Timescape_JSON($var = NULL) {
 			}
 			$information .= "</div>";
 		}
+		$information .= "<p class='event-sub-text'> " . $event['sub_text'] . " </p>";
+		$information .= "<p> Duration Event: " . $event['duration_event'] . " </p>";
+		$information .= "<p>Start: " . $event['start_date'] . " Late S: " . $event['late_start']  . " Earl E: "  . $event['early_end'] . " End: " . $event['end_date']  . " </p>";
+		
 		if (variable_get('ts_event_date_summary')){
-			$information .= "<p class='event-date-summary'> " . $event['created_by'] . " </p>";
+			$information .= "<span class='event-date-summary'> " . $event['created_by'] . " </span >";
 		}
 		if (variable_get('ts_event_date_summary')){
-		//	$information .= "<p class='event-date-summary'> " . $event['created_by'] . " </p>";
+			$information .= "<span  class='event-date-summary'> " . $event['created_at'] . " </span >";
 		}
 		if (variable_get('ts_event_date_summary')){
-		//	$information .= "<p class='event-date-summary'> " . $event['created_by'] . " </p>";
+			$information .= "<span  class='event-date-summary'> " . $event['updated_by'] . " </span >";
+		}
+		if (variable_get('ts_event_date_summary')){
+			$information .= "<span  class='event-date-summary'> " . $event['updated_at'] . " </span >";
 		}
 		
 		//if (variable_get('ts_show_link')){
@@ -330,23 +369,39 @@ function Timescape_JSON($var = NULL) {
 			$information .= "<div id='evntEdtBtns'><span class='tinybutton'> " . l(t('Edit'), 'timescape/edit/' . $event['id']) . " </span>";
 			$information .= "<span class='tinybutton'> " . l(t('Delete'), 'timescape/delete/' . $event['id']) . " </span></div>";
 		
-		$node['description'] =  $information;
-		
+		$node['title'] = $event['title'];
 		$node['start'] = $event['start_date'];
-		//$node['latestStart'] = $event[' ???? '];
-		//$node['earliestEnd'] = $event[' ???? '];
 		$node['end'] = $event['end_date'];
-		$node['title'] = $event['name'];
-		//$node['durationEvent'] = $event[' ???? '];
-		//$node['icon'] = $event[' ???? '];
-		//$node['image'] = $event[' ???? '];
-		//$node['link'] = $event[' ???? '];
+		//$node['latestStart'] = $event['late_start'];
+		//$node['earliestEnd'] = $event['early_end'];
 		
+		//$node['latestStart'] = ($event['late_start'] == NULL) ? false : $event['late_start'];
+		//$node['earliestEnd'] = ($event['early_end'] == NULL) ? false : $event['early_end'];
+		
+		$node['durationEvent'] = ($event['duration_event'] == 0) ? false : true;
+		
+		//$node['durationEvent'] = $event['duration_event'];
+		
+		$node['image'] = $event['image_URL'];
+		$node['caption'] = $event['caption'];
+		$node['link'] = $event['link_URL'];
+		$node['description'] =  $information;
 
 		
 		// EVENT POINT STYLING
 		// depending on the category, supply the appropriate classes
-		$node['classname'] = "startKnown endKnown " . $event['category'] . "_event "; //$event['name'];
+		$btwn = ($event['duration_event'] == 1) ? "" : "between ";
+		//$srtKwn = ($event['duration_event'] == 0) ? "" : "startKnown ";
+		//$endKwn = ($event['duration_event'] == 0) ? "" : "endKnown ";
+		
+		$srtKwn = "";
+		$endKwn = "";
+		$srtKwn = "startKnown ";
+		$endKwn = "endKnown ";
+		//$btwn = "between ";
+		
+		$node['classname'] = $srtKwn . $endKwn . $btwn . $event['category'] . "_event "; //$event['name'];
+	
 		
 		array_push($var['events'], $node); 
 	}
@@ -408,14 +463,20 @@ function _Timescape_load($id = NULL) {
   // Return an empty event if $id == 0
   if ($id === 0) {
     return array('id'           => '',
-                 'name'         => '',
-                 'location'     => '',
+                 'title'        => '',  
                  'start_date'   => '',
                  'end_date'     => '',
-                 'display_date' => '',
-                 'category'     => '',
-                 'comments'     => '',
-                 'documents'    => '',
+				 'late_start'     => '',
+				 'early_end'     => '',
+				 'duration_event'     => '',
+				 'category'     => '',
+				 'location'     => '',
+				 'sub_title'     => '',
+                 'description' => '',
+                 'sub_text'     => '',
+                 'caption'     => '',
+                 'image_URL'    => '',
+				 'link_URL'    => '', 
                  'created_by'   => '',
                  'created_at'   => '',
                  'updated_by'   => '',
@@ -472,24 +533,15 @@ function _Timescape_Input($form, &$form_state, $values) {
     array('#type' => 'hidden',
     '#value' => $values['id'],
     );
-  $form['name'] = 
+  $form['title'] = 
     array('#type' => 'textfield',
 	  '#title' => t('Name of the timeline event (label)'),
 	  '#size' => 75,
 	  '#maxlength' => 255,
 	  '#description' => t("Enter the name of the event you want to log"),
 	  '#required' => TRUE,
-	  '#default_value' => $values['name']
+	  '#default_value' => $values['title']
 	  );
-  $form['location'] = //THIS IS NOT A FIELD I NEED TO MAKE MANDITORY - NEED TO HAVE?
-    array('#type' => 'textfield',
-    '#title' => t('Location (optional)'),
-    '#size' => 75,
-    '#maxlength' => 255,
-    '#description' => t("Location is added to the title in the popup bubble."),
-    '#required' => FALSE,
-	  '#default_value' => $values['location']
-    );
   $form['start_date'] = 
     array('#type' => 'textfield',
     '#id' => "timescape_start_date",
@@ -514,15 +566,40 @@ function _Timescape_Input($form, &$form_state, $values) {
     '#required' => FALSE,
 	  '#default_value' => $values['end_date']
     );
-/*  $form['display_date'] = //Semandra - Added display date, rather than using start_date, end_date, etc.
+	$form['late_start'] = 
     array('#type' => 'textfield',
-    '#title' => t('Date or time description to use in the text (i.e. rather than the start date)'),
-    '#size' => 75,
-    '#maxlength' => 255,
-    '#description' => t("Enter a human readable date description (e.g. Fall 2014, May-June 2014, etc.)."),
+    '#id' => "timescape_start_date",
+    '#prefix' => "<table><tr><td>",
+    '#suffix' => "</td>",
+    '#title' => t('Latest start time'),
+    '#size' => 30,
+    '#maxlength' => 40,
+    '#description' => t("Enter the start time of the event (YYYY-MM-DD HH:MM)."),
     '#required' => FALSE,
-	  '#default_value' => $values['display_date']
-    );*/
+	  '#default_value' => $values['late_start']
+    );
+	$form['early_end'] = 
+    array('#type' => 'textfield',
+    '#id' => "timescape_end_date",
+    '#prefix' => "<td>",
+    '#suffix' => "</td></tr></table>",
+    '#title' => t('Earliest End time'),
+    '#size' => 30,
+    '#maxlength' => 40,
+    '#description' => t("Enter the Earliest End time of the event (YYYY-MM-DD HH:MM)."),
+    '#required' => FALSE,
+	  '#default_value' => $values['early_end']
+    );
+	$active = array(0 => t('No'), 1 => t('Yes'));
+	$form['duration_event'] = 
+    array('#type' => 'radios',
+    '#title' => t('Duration Event'),
+    '#options' => $active,
+    '#maxlength' => 255,
+    '#description' => t("Event happend continuously between two dates"),
+    '#required' => FALSE,
+	  '#default_value' => isset($node->active) ? $node->active : 0,
+    );
   $form['category'] = 
     array('#type' => 'select',
     '#id' => 'timescape_category',
@@ -542,35 +619,67 @@ function _Timescape_Input($form, &$form_state, $values) {
     '#description' => t("Create new category (required for first event). Select 'other' from category to create a new category name."),
     '#default_value' => $values['category']
     );
-  $form['comments'] = 
+	$form['location'] = 
+		array('#type' => 'textfield',
+		'#title' => t('Location (optional)'),
+		'#size' => 75,
+		'#maxlength' => 255,
+		'#description' => t("Location is added to the title in the popup bubble."),
+		'#required' => FALSE,
+		  '#default_value' => $values['location']
+    );
+  $form['sub_title'] = 
+    array('#type' => 'textfield',
+    '#title' => t('Subtitle'),
+    '#size' => 75,
+    '#maxlength' => 255,
+    '#description' => t("Can be styled as subtitle or as a replacement title."),
+    '#required' => FALSE,
+	  '#default_value' => $values['sub_title']
+    );
+  $form['description'] = 
     array('#type' => 'textarea',
     '#title' => t('Details of Event'),
     '#description' => t("Enter description of the event (appears in popup bubble). HTML formatting is okay to styles to the description or to add links."),
     '#required' => FALSE,
-    '#default_value' => $values['comments'],
+    '#default_value' => $values['description'],
     );
-/*  if ($values['documents']) {
-    $filenames = array();
-    $file_values = array();
-    foreach ( explode(',', $values['documents']) as $filename ) {
-      $filenames[$filename] = str_replace('_', ' ', $filename);
-      array_push($file_values, $filename);
-    }
-    $form['documents_earlier'] = 
-      array('#type' => 'checkboxes',
-      '#title' => 'Previously attached files',
-      '#options' => $filenames,
-      '#default_value' => $file_values,
-      );
-  }
-  $form['documents'] = 
-    array('#type' => 'file',
-    '#attributes' => array('class' => array('multi'),
-                           'name' => 'files[]'),
-    '#title' => t('Attached Files'),
-    '#description' => t("Upload files that are related to the event."),
+	
+	$form['sub_text'] = 
+    array('#type' => 'textfield',
+    '#title' => t('Sub-text'),
+    '#description' => t("Optional text area. (i.e. Used as a human friendly date replacement -- e.g.'Fall 2015')"),
     '#required' => FALSE,
-  );*/
+    '#default_value' => $values['sub_text'],
+    );
+	$form['caption'] = 
+    array('#type' => 'textfield',
+    '#title' => t('Caption'),
+    '#size' => 75,
+    '#maxlength' => 255,
+    '#description' => t("Mouseover tool-tip showing in timeline view."),
+    '#required' => FALSE,
+	  '#default_value' => $values['caption']
+    );
+	$form['image_URL'] = 
+    array('#type' => 'textfield',
+    '#title' => t('Image'),
+    '#size' => 75,
+    '#maxlength' => 255,
+    '#description' => t("Full image URL (shows in popup bubble)."),
+    '#required' => FALSE,
+	  '#default_value' => $values['image_URL']
+    );
+	$form['link_URL'] = 
+    array('#type' => 'textfield',
+    '#title' => t('Link URL'),
+    '#size' => 75,
+    '#maxlength' => 255,
+    '#description' => t("Link URL (Title becomes link in popup bubble)."),
+    '#required' => FALSE,
+	  '#default_value' => $values['link_URL']
+    );
+
   $form['event_submit'] = 
     array('#type' => 'submit',
     '#value' => "Submit Form",
@@ -624,49 +733,31 @@ function _Timescape_Input_validate(&$form, &$form_state) {
 function _Timescape_Input_submit($form_id, &$form_state) {
   $trn = db_transaction();
   global $user;
-  // TODO: implement proper file handling
-  // Semandra - removed file handling -- not needed.
   try {
-/*    foreach ($_FILES['files']['name'] as $key => $filename) {
-      if (!$_FILES['files']['error'][$key]) {
-        // Convert all white-space to underlines to get nicer URLs
-        $filename = str_replace(' ', '_', $filename);
-        $path = drupal_get_path('module', 'Timescape') . '/uploads/';
-        // a VERY basic check if file exists, just adding a _ at the beginning
-        // until the name is unique. TODO: better filename collision renaming.
-        while (file_exists($path . $filename)) {
-          $filename = '_' . $filename;
-        }
-        if (move_uploaded_file($_FILES['files']['tmp_name'][$key], $path . $filename)) {
-          $form_state['values']['documents'] .= $filename . ',';
-        }
-      }
-    }
-    if ($form_state['values']['documents']) {
-      $form_state['values']['documents'] = substr($form_state['values']['documents'], 0, -1);
-    }
-    if (in_array('documents_earlier', array_keys($form_state['values']))) {
-      foreach ($form_state['values']['documents_earlier'] as $previous) {
-        if ($previous) {
-          if ($form_state['values']['documents']) {
-            $form_state['values']['documents'] .= ',' . str_replace(' ', '_', $previous);
-          } else {
-            $form_state['values']['documents'] .= str_replace(' ', '_', $previous);
-          }
-        }
-      }
-    }*/
+
     $category = $form_state['values']['category'] == 'other' ? $form_state['values']['category_other'] : $form_state['values']['category'];
-    $fields = array('name' => $form_state['values']['name'], 
-                 'location' => $form_state['values']['location'], 
+    $fields = array('title' => $form_state['values']['title'],  
                  'start_date' => strtotime($form_state['values']['start_date']), 
                  'end_date' => strtotime($form_state['values']['end_date']) 
                                ? strtotime($form_state['values']['end_date']) 
                                : NULL, 
-                 //'institutions' => str_replace(', 0', '', implode(', ', $form_state['values']['institutions'])), 
-                 'category' => $category,
-                 'comments' => $form_state['values']['comments'], );
-                // 'documents' => $form_state['values']['documents'],);  //Semandra - took this out because don't need documents
+				'late_start' => strtotime($form_state['values']['late_start']) 
+                               ? strtotime($form_state['values']['late_start']) 
+                              : NULL, 
+				'early_end' => strtotime($form_state['values']['early_end']) 
+                               ? strtotime($form_state['values']['early_end']) 
+                               : NULL,
+                 'duration_event' => $form_state['values']['duration_event'],
+				 'category' => $category,
+				 'location' => $form_state['values']['location'],
+				 'sub_title' => $form_state['values']['sub_title'],
+				 'description' => $form_state['values']['description'], 
+				 'sub_text' => $form_state['values']['sub_text'],
+				 'caption' => $form_state['values']['caption'],
+				 'image_URL' => $form_state['values']['image_URL'],
+				 'link_URL' => $form_state['values']['link_URL'],
+                 );
+               
     if (!$form_state['values']['id']) {
       $fields['created_by'] = $user->name;
       $fields['created_at'] = time();

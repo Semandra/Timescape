@@ -138,7 +138,7 @@ Timeline.createHotZoneBandInfo = function(params) {
 
 Timeline.OriginalEventPainter.prototype._paintEventTape = function(evt, iconTrack, startPixel, endPixel, color, opacity, metrics, theme, tape_index) {
     //var tapeWidth = endPixel - startPixel;
-	var tapeWidth = endPixel - startPixel + 5; //Semandra - add space to tape width
+//	var tapeWidth = endPixel - startPixel + 5; //Semandra - add space to tape width
 	var tapeWidth = endPixel - startPixel
     var tapeHeight = theme.event.tape.height;
     var top = metrics.trackOffset + iconTrack * metrics.trackIncrement;
@@ -146,12 +146,12 @@ Timeline.OriginalEventPainter.prototype._paintEventTape = function(evt, iconTrac
     
 	// Semandra -- create tapeClass variable to add additional styles
 	var tapeClass = "tapeLayer" + tape_index + " ";
-    if (evt._start == evt._latestStart) {
-        tapeClass = tapeClass + "startKnown ";
-    }
-    if (evt._end == evt._earliestEnd) {
-        tapeClass = tapeClass + "endKnown ";
-    }
+    //if (evt._start == evt._latestStart) {
+     //   tapeClass = tapeClass + "startKnown ";
+    //}
+    //if (evt._end == evt._earliestEnd) {
+		//tapeClass = tapeClass + "endKnown ";
+    //}
     if (evt._instant == true) {
         tapeClass = tapeClass + "singleDateEvent";
     }
@@ -162,7 +162,8 @@ Timeline.OriginalEventPainter.prototype._paintEventTape = function(evt, iconTrac
 	
     tapeDiv.id = this._encodeEventElID("tape" + tape_index, evt);
     tapeDiv.style.left = startPixel + "px";
-    tapeDiv.style.width = tapeWidth + "px";
+    tapeDiv.style.width = tapeWidth - tapeHeight + "px"; // Semandra - subtract tapeHeight-borders being added (tapeHeight/2)
+	//tapeDiv.style.minWidth = tapeHeight + "px";
     tapeDiv.style.height = tapeHeight + "px";
     tapeDiv.style.top = top + "px";
     if (evt._title != null) {

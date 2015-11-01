@@ -8,13 +8,77 @@
  * (at your option) any later version.
  * 
  * Timescape is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * but without any warranty. See the GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
  * along with Timescape.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+/* ------------------------ default classes for timeline events   ------------------------------- */
+/*.timeline-event-tape, .timeline-small-event-icon  {
+    background-color: inherit;
+}
+.timeline-small-event-tape {
+	background-color: #A1C0EA;
+}
+
+.timeline-event-tape.tapeLayer0, .timeline-event-tape.tapeLayer1  {
+	background-color: #205092;
+	background-image: -webkit-linear-gradient(270deg,rgba(32,80,146,0.40) 0%,rgba(32,80,146,0.40) 100%);
+	background-image: -moz-linear-gradient(270deg,rgba(32,80,146,0.40) 0%,rgba(32,80,146,0.40) 100%);
+	background-image: -o-linear-gradient(270deg,rgba(32,80,146,0.40) 0%,rgba(32,80,146,0.40) 100%);
+	background-image: linear-gradient(180deg,rgba(32,80,146,0.40) 0%,rgba(32,80,146,0.40) 100%);
+	border-radius: 5px;
+	border-width: 5px;
+}
+
+.timeline-event-tape.tapeLayer1.startKnown {
+	border-left: solid 5px #205092;
+	border-right: none;
+	border-radius: 5px;
+}
+.timeline-event-tape.tapeLayer0.startKnown.endKnown {
+	border-left: solid 5px #205092;
+	border-right: solid 5px #205092;
+}
+.timeline-event-tape.tapeLayer1.endKnown  {
+	border-right: solid 5px #205092 ;
+	border-left: none;
+}
+*/
+/*  Single Event - from a date to a date */
+/*.timeline-event-tape.tapeLayer0.singleDateEvent.between  {
+	background-image: url(images/dp-blue-bg.png);
+}
+.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown  {
+	border-left: solid 5px #205092 ;
+	border-right: none;
+}
+ .timeline-event-tape.tapeLayer0.singleDateEvent.between.endKnown  {
+	border-right: solid 5px #205092 ;
+	border-left: none;	
+}
+.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown  {
+	border-left: solid 5px #205092 ;
+	border-right: solid 5px #205092 ;
+}*/
+
+/*  Single Event - single date */
+/* .timeline-event-tape.tapeLayer0.singleDateEvent  {
+
+}
+ .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown  {
+	border-left: solid 4px #205092 ;
+	border-right: none;
+}
+ .timeline-event-tape.tapeLayer0.singleDateEvent.endKnown  {
+	border-right: solid 4px #205092 ;
+	border-left: none;	
+}
+ .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.endKnown, .timeline-event-tape.tapeLayer1.startKnown.endKnown {
+	border-left: solid 4px #205092 ;
+	border-right: solid 4px #205092 ;
+}*/
 
 
 /* ------------------------ custom classes for Digital Page   ------------------------------- */
@@ -23,19 +87,23 @@
 	padding: 10px 20px;
 }
 /* TODO --- remove the need to hide the icons*/
-#Timescape_timeline .timeline-event-icon {
-	display: none;
+#Timescape_timeline .timeline-event-icon img{
+	visibility: hidden;
 }
 #Timescape_timeline .timeline-event-tape {
 	/*min-width: 8px;*/
 }
 
-#Timescape_timeline .timeline-event-tape, .timeline-small-event-tape, .timeline-small-event-icon  {
+/*#Timescape_timeline .timeline-event-tape, .timeline-small-event-tape, .timeline-small-event-icon  {
     background-color: #fff;
 }
 
+#Timescape_timeline .timeline-small-event-tape {
+	background-color: #205092;
+}
+
 #Timescape_timeline .timeline-event-tape.tapeLayer0, #Timescape_timeline .timeline-event-tape.tapeLayer1  {
-	/*background-color: #205092;*/
+	background-color: #205092;
 	background-image: -webkit-linear-gradient(270deg,rgba(32,80,146,0.40) 0%,rgba(32,80,146,0.40) 100%);
 	background-image: -moz-linear-gradient(270deg,rgba(32,80,146,0.40) 0%,rgba(32,80,146,0.40) 100%);
 	background-image: -o-linear-gradient(270deg,rgba(32,80,146,0.40) 0%,rgba(32,80,146,0.40) 100%);
@@ -56,10 +124,10 @@
 #Timescape_timeline .timeline-event-tape.tapeLayer1.endKnown  {
 	border-right: solid 5px #205092 ;
 	border-left: none;
-}
+}*/
 
 /*  Single Event - from a date to a date */
-#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between  {
+/*#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between  {
 	background-image: url(images/dp-blue-bg.png);
 }
 #Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown  {
@@ -73,10 +141,10 @@
 #Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown  {
 	border-left: solid 5px #205092 ;
 	border-right: solid 5px #205092 ;
-}
+}*/
 
 /*  Single Event - single date */
-#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent  {
+/*#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent  {
 
 }
 #Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown  {
@@ -91,13 +159,12 @@
 	border-left: solid 4px #205092 ;
 	border-right: solid 4px #205092 ;
 }
-
+*/
 
 
 /*  --------------------  Writing Event     ------------------------------------- */
 
-#Timescape_timeline .timeline-event-tape.tapeLayer0.writing_event , #Timescape_timeline .timeline-event-tape.tapeLayer1.writing_event   {
-	/*background-color: #205092;*/
+/*#Timescape_timeline .timeline-event-tape.tapeLayer0.writing_event , #Timescape_timeline .timeline-event-tape.tapeLayer1.writing_event   {
 	background-image: -webkit-linear-gradient(270deg,rgba(0,146,0,0.4) 0%,rgba(0,146,0,0.6) 100%);
 	background-image: -moz-linear-gradient(270deg,rgba(0,146,0,0.4) 0%,rgba(0,146,0,0.6) 100%);
 	background-image: -o-linear-gradient(270deg,rgba(0,146,0,0.4) 0%,rgba(0,146,0,0.6) 100%);
@@ -120,7 +187,6 @@
 	border-left: none;
 }
 
-/*  Single Event - from a date to a date */
 #Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.writing_event  {
 	background-image: url(images/dp-lightgreen-bg.png);
 }
@@ -137,7 +203,6 @@
 	border-right: solid 5px #009200 ;
 }
 
-/*  Single Event - single date */
 #Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.writing_event  {
 
 }
@@ -152,13 +217,13 @@
 #Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.endKnown.writing_event, #Timescape_timeline .timeline-event-tape.tapeLayer1.startKnown.endKnown.writing_event {  
 	border-left: solid 4px #009200 ;
 	border-right: solid 4px #009200 ;
-}
+}*/
 
 
 /*  --------------------  Art Event - red    ------------------------------------- */
 
-#Timescape_timeline .timeline-event-tape.tapeLayer0.art_event , #Timescape_timeline .timeline-event-tape.tapeLayer1.art_event   {
-	/*background-color: #205092;*/
+/*#Timescape_timeline .timeline-event-tape.tapeLayer0.art_event , #Timescape_timeline .timeline-event-tape.tapeLayer1.art_event   {
+	background-color: #205092;
 	background-image: -webkit-linear-gradient(270deg,rgba(164,4,4,0.4) 0%,rgba(164,4,4,0.4) 100%);
 	background-image: -moz-linear-gradient(270deg,rgba(164,4,4,0.4) 0%,rgba(164,4,4,0.4) 100%);
 	background-image: -o-linear-gradient(270deg,rgba(164,4,4,0.4) 0%,rgba(164,4,4,0.4) 100%);
@@ -179,10 +244,10 @@
 #Timescape_timeline .timeline-event-tape.tapeLayer1.endKnown.art_event  {
 	border-right: solid 5px #A40404 ;
 	border-left: none;
-}
+}*/
 
 /*  Single Event - from a date to a date */
-#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.art_event  {
+/*#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.art_event  {
 	background-image: url(images/dp-red-bg.png);
 }
 #Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.art_event  {
@@ -197,9 +262,9 @@
 	border-left: solid 5px #A40404 ;
 	border-right: solid 5px #A40404 ;
 }
-
+*/
 /*  Single Event - single date */
-#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.art_event  {
+/*#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.art_event  {
 
 }
 #Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.art_event  {
@@ -214,12 +279,12 @@
 	border-left: solid 4px #A40404 ;
 	border-right: solid 4px #A40404 ;
 }
-
+*/
 /*  --------------------  Correspondence    ------------------------------------- */
 /*  Range Event - from a date to a date */
 
-#Timescape_timeline .timeline-event-tape.tapeLayer0.letter_event , #Timescape_timeline .timeline-event-tape.tapeLayer1.letter_event   {
-	/*background-color: #205092;*/
+/*#Timescape_timeline .timeline-event-tape.tapeLayer0.letter_event , #Timescape_timeline .timeline-event-tape.tapeLayer1.letter_event   {
+	background-color: #205092;
 	background-image: -webkit-linear-gradient(270deg,rgba(61,0,188,0.4) 0%,rgba(61,0,188,0.6) 100%);
 	background-image: -moz-linear-gradient(270deg,rgba(61,0,188,0.4) 0%,rgba(61,0,188,0.6) 100%);
 	background-image: -o-linear-gradient(270deg,rgba(61,0,188,0.4) 0%,rgba(61,0,188,0.6) 100%);
@@ -240,10 +305,10 @@
 #Timescape_timeline .timeline-event-tape.tapeLayer1.endKnown.letter_event {
 	border-right: solid 5px #3D00BC;
 	border-left: none;
-}
+}*/
 
 /*  Single Event - from a date to a date */
-#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.letter_event {
+/*#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.letter_event {
 	background-image: url(images/dp-lightpurple-bg.png);
 }
 #Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.letter_event {
@@ -257,10 +322,10 @@
 #Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown.letter_event, #Timescape_timeline .timeline-event-tape.tapeLayer1.startKnown.endKnown.letter_event {
 	border-left: solid 5px #3D00BC;
 	border-right: solid 5px #3D00BC;
-}
+}*/
 
 /*  Single Event - single date */
-#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.letter_event {
+/*#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.letter_event {
 
 }
 #Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.letter_event {
@@ -275,12 +340,12 @@
 	border-left: solid 4px #3D00BC;
 	border-right: solid 4px #3D00BC;
 }
-
+*/
 /*  --------------------  Life Event    ------------------------------------- */
 /*  Range Event - from a date to a date */
 
-#Timescape_timeline .timeline-event-tape.tapeLayer0.life_event , #Timescape_timeline .timeline-event-tape.tapeLayer1.life_event   {
-	/*background-color: #205092;*/
+/*#Timescape_timeline .timeline-event-tape.tapeLayer0.life_event , #Timescape_timeline .timeline-event-tape.tapeLayer1.life_event   {
+	background-color: #205092;
 	background-image: -webkit-linear-gradient(270deg,rgba(66,175,221,.4) 0%,rgba(66,175,221,0.62) 100%);
 	background-image: -moz-linear-gradient(270deg,rgba(66,175,221,.4) 0%,rgba(66,175,221,0.62) 100%);
 	background-image: -o-linear-gradient(270deg,rgba(66,175,221,.4) 0%,rgba(66,175,221,0.62) 100%);
@@ -301,10 +366,10 @@
 #Timescape_timeline .timeline-event-tape.tapeLayer1.endKnown.life_event {
 	border-right: solid 5px #1096CF;
 	border-left: none;
-}
+}*/
 
 /*  Single Event - from a date to a date */
-#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.life_event {
+/*#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.life_event {
 	background-image: url(images/dp-lightblue-bg.png);
 }
 #Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.life_event {
@@ -319,9 +384,9 @@
 	border-left: solid 5px #1096CF;
 	border-right: solid 5px #1096CF;
 }
-
+*/
 /*  Single Event - single date */
-#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.life_event {
+/*#Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.life_event {
 
 }
 #Timescape_timeline .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.life_event {
@@ -338,10 +403,10 @@
 }
 
 
-
 .timeline-event-icon, .timeline-event-label, .timeline-event-tape {
     font-size: 13px;
 }
+*/
 
 /* =====================    Bubble Display     ========================== */
 
