@@ -15,70 +15,50 @@
 */
 
 /* ------------------------ default classes for timeline events   ------------------------------- */
-/*.timeline-event-tape, .timeline-small-event-icon  {
-    background-color: inherit;
-}
 .timeline-small-event-tape {
-	background-color: #A1C0EA;
-}
-
-.timeline-event-tape.tapeLayer0, .timeline-event-tape.tapeLayer1  {
 	background-color: #205092;
-	background-image: -webkit-linear-gradient(270deg,rgba(32,80,146,0.40) 0%,rgba(32,80,146,0.40) 100%);
-	background-image: -moz-linear-gradient(270deg,rgba(32,80,146,0.40) 0%,rgba(32,80,146,0.40) 100%);
-	background-image: -o-linear-gradient(270deg,rgba(32,80,146,0.40) 0%,rgba(32,80,146,0.40) 100%);
-	background-image: linear-gradient(180deg,rgba(32,80,146,0.40) 0%,rgba(32,80,146,0.40) 100%);
+}
+.timeline-event-tape.tapeLayer0, .timeline-event-tape.tapeLayer1 {
+	background-color: #A1C0EA;
 	border-radius: 5px;
 	border-width: 5px;
+	border-left: solid 5px #A1C0EA;
+	border-right: solid 5px #A1C0EA;
 }
-
-.timeline-event-tape.tapeLayer1.startKnown {
+.timeline-event-tape.tapeLayer0.startKnown {
 	border-left: solid 5px #205092;
-	border-right: none;
+	border-right: solid 5px #A1C0EA;
 	border-radius: 5px;
 }
 .timeline-event-tape.tapeLayer0.startKnown.endKnown {
 	border-left: solid 5px #205092;
 	border-right: solid 5px #205092;
 }
-.timeline-event-tape.tapeLayer1.endKnown  {
-	border-right: solid 5px #205092 ;
-	border-left: none;
+.timeline-event-tape.tapeLayer0.endKnown {
+	border-right: solid 5px #205092;
+	border-left: solid 5px #A1C0EA;
 }
-*/
-/*  Single Event - from a date to a date */
-/*.timeline-event-tape.tapeLayer0.singleDateEvent.between  {
-	background-image: url(images/dp-blue-bg.png);
+.timeline-event-tape.tapeLayer0.between, .timeline-event-tape.tapeLayer1.between {
+	background-color: #A1C0EA;
+	background: radial-gradient(#A1C0EA 0px, #A1C0EA 50%, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0) 100%) 0px 0px;	
+	background-size: 10px 10px;
+	background-position: 0 0;
+	border-radius: 5px;
+	border-left: solid 5px #A1C0EA;
+	border-right: solid 5px #A1C0EA;
 }
-.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown  {
-	border-left: solid 5px #205092 ;
-	border-right: none;
+.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown {
+	border-left: solid 5px #205092;
+	border-right: solid 5px #A1C0EA;
 }
- .timeline-event-tape.tapeLayer0.singleDateEvent.between.endKnown  {
-	border-right: solid 5px #205092 ;
-	border-left: none;	
+.timeline-event-tape.tapeLayer0.singleDateEvent.between.endKnown {
+	border-right: solid 5px #205092;
+	border-left: solid 5px #A1C0EA;
 }
-.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown  {
-	border-left: solid 5px #205092 ;
-	border-right: solid 5px #205092 ;
-}*/
-
-/*  Single Event - single date */
-/* .timeline-event-tape.tapeLayer0.singleDateEvent  {
-
+.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown {
+	border-left: solid 5px #205092;
+	border-right: solid 5px #205092;
 }
- .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown  {
-	border-left: solid 4px #205092 ;
-	border-right: none;
-}
- .timeline-event-tape.tapeLayer0.singleDateEvent.endKnown  {
-	border-right: solid 4px #205092 ;
-	border-left: none;	
-}
- .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.endKnown, .timeline-event-tape.tapeLayer1.startKnown.endKnown {
-	border-left: solid 4px #205092 ;
-	border-right: solid 4px #205092 ;
-}*/
 
 
 /* ------------------------ custom classes for Digital Page   ------------------------------- */
@@ -89,9 +69,6 @@
 /* TODO --- remove the need to hide the icons*/
 #Timescape_timeline .timeline-event-icon img{
 	visibility: hidden;
-}
-#Timescape_timeline .timeline-event-tape {
-	/*min-width: 8px;*/
 }
 
 /*#Timescape_timeline .timeline-event-tape, .timeline-small-event-tape, .timeline-small-event-icon  {

@@ -159,10 +159,11 @@ function Timescape_CSS($cusCss = NULL) {
 						border-left: solid ". $border ."px ". $evt_color_band .";
 					}";
 					
-					
+				//    background: radial-gradient(rgb(255, 35, 35) 0px, rgb(255, 35, 35) 20%, rgba(0, 0, 0, 0) 28%, rgba(0, 0, 0, 0) 100%) 0px 0px / 60px 60px no-repeat padding-box border-box;	
+			//background-image: radial-gradient(closest-side, transparent 80%, rgba(256,256,256,1) 100%), radial-gradient(closest-side, transparent 100%, rgba(256,256,256,1) 100%);
 			$cusCss .= ".timeline-event-tape.tapeLayer0.between." . $ts_category . "_event , .timeline-event-tape.tapeLayer1.between." . $ts_category . "_event  {
 						background-color: ". $evt_color_band .";
-						background-image: radial-gradient(closest-side, transparent 80%, rgba(256,256,256,1) 100%), radial-gradient(closest-side, transparent 100%, rgba(256,256,256,1) 100%);
+						background: radial-gradient(". $evt_color_band ." 0px, ". $evt_color_band ." 50%, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0) 100%) 0px 0px;		
 						background-size:". $tape ."px ". $tape ."px;
 						background-position:0 0;
 						border-radius: ". $border ."px;
@@ -171,12 +172,10 @@ function Timescape_CSS($cusCss = NULL) {
 					}
 					.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown." . $ts_category . "_event   {
 					border-left: solid ". $border ."px ". $evt_color .";
-					border-right: none;
 					border-right: solid ". $border ."px ". $evt_color_band .";
 				}
 				 .timeline-event-tape.tapeLayer0.singleDateEvent.between.endKnown." . $ts_category . "_event   {
 					border-right: solid ". $border ."px ". $evt_color .";
-					border-left: none;
 					border-left: solid ". $border ."px ". $evt_color_band .";
 				}
 				.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown." . $ts_category . "_event   {
@@ -184,40 +183,6 @@ function Timescape_CSS($cusCss = NULL) {
 					border-right: solid ". $border ."px ". $evt_color .";
 				}";
 	
-				/*  Single Event - from a date to a date */
-		/*$cusCss .= "	.timeline-event-tape.tapeLayer0.singleDateEvent.between." . $ts_category . "_event  {
-						background-color: ". $evt_color_band .";
-						background-image: radial-gradient(closest-side, transparent 80%, rgba(256,256,256,1) 100%), radial-gradient(closest-side, transparent 100%, rgba(256,256,256,1) 100%);
-				}
-				.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown." . $ts_category . "_event   {
-					border-left: solid 5px ". $evt_color .";
-					border-right: none;
-				}
-				 .timeline-event-tape.tapeLayer0.singleDateEvent.between.endKnown." . $ts_category . "_event   {
-					border-right: solid 5px ". $evt_color .";
-					border-left: none;	
-				}
-				.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown." . $ts_category . "_event   {
-					border-left: solid 5px ". $evt_color .";
-					border-right: solid 5px ". $evt_color .";
-				}";*/
-				
-				/*  Single Event - single date */
-			/*$cusCss .= "	 .timeline-event-tape.tapeLayer0.singleDateEvent." . $ts_category . "_event   {
-				
-				}
-				 .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown." . $ts_category . "_event   {
-					border-left: solid 4px ". $evt_color .";
-					border-right: none;
-				}
-				 .timeline-event-tape.tapeLayer0.singleDateEvent.endKnown." . $ts_category . "_event   {
-					border-right: solid 4px ". $evt_color .";
-					border-left: none;	
-				}
-				 .timeline-event-tape.tapeLayer0.singleDateEvent.startKnown.endKnown." . $ts_category . "_event , .timeline-event-tape.tapeLayer1.startKnown.endKnown." . $ts_category . "_event  {
-					border-left: solid 4px ". $evt_color .";
-					border-right: solid 4px ". $evt_color .";
-				}";*/
 			};
 
 
@@ -323,7 +288,9 @@ function Timescape_JSON($var = NULL) {
 	//$var = $events;
 	$var = array('events'=>[]);
 	$dFormat = variable_get('ts_date_format');
-	
+	$srtKwn = "";
+	$endKwn = "";
+	$btwn = "";
 	//if (variable_get('ts_show_title')){
 			//if 'false' add custom styles to hide div.timeline-event-bubble-title
 	//}
@@ -345,7 +312,12 @@ function Timescape_JSON($var = NULL) {
 			$information .= "</div>";
 		}
 		$information .= "<p class='event-sub-text'> " . $event['sub_text'] . " </p>";
+		
+		//===================FOR TESTING ONLY =======================================
 		$information .= "<p> Duration Event: " . $event['duration_event'] . " </p>";
+
+		//===========================================================================
+		
 		$information .= "<p>Start: " . $event['start_date'] . " Late S: " . $event['late_start']  . " Earl E: "  . $event['early_end'] . " End: " . $event['end_date']  . " </p>";
 		
 		if (variable_get('ts_event_date_summary')){
@@ -394,10 +366,30 @@ function Timescape_JSON($var = NULL) {
 		//$srtKwn = ($event['duration_event'] == 0) ? "" : "startKnown ";
 		//$endKwn = ($event['duration_event'] == 0) ? "" : "endKnown ";
 		
-		$srtKwn = "";
-		$endKwn = "";
-		$srtKwn = "startKnown ";
-		$endKwn = "endKnown ";
+		// If end date is blank then fill it in and make startKnown and endKnown
+		if ($event['end_date'] == NULL){
+			$node['end'] = $event['start_date'];
+			$srtKwn = "startKnown ";
+			$endKwn = "endKnown ";
+		}
+		// If precise_start is true then add startKnown
+		if ($event['late_start'] == NULL){
+			$srtKwn = "startKnown ";
+		}
+		// If precise_end is true then add endKnown
+		if ($event['early_end'] == NULL){
+			$endKwn = "endKnown ";
+		}
+		
+		if ($event['early_end'] != NULL && $event['early_end'] != $event['end_date']){
+			$endKwn = " ";
+		}
+		if ($event['late_start'] != NULL && $event['late_start'] != $event['start_date']){
+			$srtKwn = " ";
+		}
+		
+		//$srtKwn = " ";
+		//$endKwn = " ";
 		//$btwn = "between ";
 		
 		$node['classname'] = $srtKwn . $endKwn . $btwn . $event['category'] . "_event "; //$event['name'];
@@ -407,6 +399,9 @@ function Timescape_JSON($var = NULL) {
 	}
 	
 	//-------------- load JSON file if URL provided ---------------
+	// TO-DO This linked JSON processing is incomplete -- field names and other process is not being performed
+	//
+	
 	if (variable_get('ts_linked_file_path')){
 	//	$fileJSON = variable_get('ts_linked_file_path');
 		$url = variable_get('ts_linked_file_path');
@@ -459,7 +454,9 @@ function Timescape_JSON($var = NULL) {
  *   An associative array of arrays describing the database table.
 */
 function _Timescape_load($id = NULL) {
-  $date_format = $id ? 'Y-m-d H:i:s' : 'D M d Y H:i:s \G\M\TO';
+  //$date_format = $id ? 'Y-m-d H:i:s' : 'D M d Y H:i:s \G\M\TO';
+  $date_format = $id ? 'Y-m-d' : 'M d Y';
+  
   // Return an empty event if $id == 0
   if ($id === 0) {
     return array('id'           => '',
@@ -490,6 +487,8 @@ function _Timescape_load($id = NULL) {
     while ($record = $records->fetchAssoc()) {
       $record['start_date'] = date($date_format, $record['start_date']);
       $record['end_date'] = $record['end_date'] ? date($date_format, $record['end_date']) : '';
+	  $record['late_start'] = $record['late_start'] ? date($date_format, $record['late_start']) : '';
+	  $record['early_end'] = $record['early_end'] ? date($date_format, $record['early_end']) : '';
       if ($id and $id == $record['id']) {
         return $record;
       }
@@ -540,25 +539,44 @@ function _Timescape_Input($form, &$form_state, $values) {
 	  '#maxlength' => 255,
 	  '#description' => t("Enter the name of the event you want to log"),
 	  '#required' => TRUE,
-	  '#default_value' => $values['title']
+	  '#default_value' => $values['title'],
 	  );
   $form['start_date'] = 
     array('#type' => 'textfield',
-    '#id' => "timescape_start_date",
-    '#prefix' => "<table><tr><td>",
-    '#suffix' => "</td>",
-    '#title' => t('Start time'),
-    '#size' => 30,
-    '#maxlength' => 40,
-    '#description' => t("Enter the start time of the event (YYYY-MM-DD HH:MM)."),
-    '#required' => TRUE,
+		'#id' => "timescape_start_date",
+		//'#prefix' => "<table><tr><td>",
+		//'#suffix' => "</td>",
+		'#title' => t('Start time'),
+		'#size' => 30,
+		'#maxlength' => 40,
+		'#description' => t("Enter the start time of the event (YYYY-MM-DD HH:MM)."),
+		'#required' => TRUE,
 	  '#default_value' => $values['start_date']
+    );
+//	$form['start_precise'] = 
+//    array('#type' => 'checkbox',
+//	  '#title' => t('Precise Date'),
+//	  //'#description' => t("Known or estimated"),
+//	  '#required' => TRUE,
+//	  '#default_value' => 1,
+//	  );
+	$form['late_start'] = 
+    array('#type' => 'textfield',
+		'#id' => "timescape_start_date",
+		//'#prefix' => "<table><tr><td>",
+		//'#suffix' => "</td>",
+		'#title' => t('Latest start time'),
+		'#size' => 30,
+		'#maxlength' => 40,
+		'#description' => t("If an estimate enter the latest start time of the event (YYYY-MM-DD HH:MM)."),
+		'#required' => FALSE,
+	  '#default_value' => $values['late_start']
     );
   $form['end_date'] = 
     array('#type' => 'textfield',
     '#id' => "timescape_end_date",
-    '#prefix' => "<td>",
-    '#suffix' => "</td></tr></table>",
+  //  '#prefix' => "<td>",
+  //  '#suffix' => "</td></tr></table>",
     '#title' => t('End time'),
     '#size' => 30,
     '#maxlength' => 40,
@@ -566,39 +584,27 @@ function _Timescape_Input($form, &$form_state, $values) {
     '#required' => FALSE,
 	  '#default_value' => $values['end_date']
     );
-	$form['late_start'] = 
-    array('#type' => 'textfield',
-    '#id' => "timescape_start_date",
-    '#prefix' => "<table><tr><td>",
-    '#suffix' => "</td>",
-    '#title' => t('Latest start time'),
-    '#size' => 30,
-    '#maxlength' => 40,
-    '#description' => t("Enter the start time of the event (YYYY-MM-DD HH:MM)."),
-    '#required' => FALSE,
-	  '#default_value' => $values['late_start']
-    );
 	$form['early_end'] = 
     array('#type' => 'textfield',
-    '#id' => "timescape_end_date",
-    '#prefix' => "<td>",
-    '#suffix' => "</td></tr></table>",
-    '#title' => t('Earliest End time'),
-    '#size' => 30,
-    '#maxlength' => 40,
-    '#description' => t("Enter the Earliest End time of the event (YYYY-MM-DD HH:MM)."),
-    '#required' => FALSE,
-	  '#default_value' => $values['early_end']
+		'#id' => "timescape_end_date",
+		//'#prefix' => "<td>",
+//		'#suffix' => "</td></tr></table>",
+		'#title' => t('Earliest End time'),
+		'#size' => 30,
+		'#maxlength' => 40,
+		'#description' => t("Enter the Earliest End time of the event (YYYY-MM-DD HH:MM)."),
+		'#required' => FALSE,
+		  '#default_value' => $values['early_end']
     );
 	$active = array(0 => t('No'), 1 => t('Yes'));
 	$form['duration_event'] = 
-    array('#type' => 'radios',
-    '#title' => t('Duration Event'),
-    '#options' => $active,
-    '#maxlength' => 255,
-    '#description' => t("Event happend continuously between two dates"),
-    '#required' => FALSE,
-	  '#default_value' => isset($node->active) ? $node->active : 0,
+		array('#type' => 'radios',
+		'#title' => t('Duration Event'),
+		'#options' => $active,
+		'#maxlength' => 255,
+		'#description' => t("Event happend continuously between two dates"),
+		'#required' => FALSE,
+		'#default_value' => isset($values['duration_event']) ? $values['duration_event'] : 0,
     );
   $form['category'] = 
     array('#type' => 'select',
@@ -700,14 +706,16 @@ function _Timescape_Input($form, &$form_state, $values) {
  *   The current state of the form, supplied by drupal
 */
 function _Timescape_Input_validate(&$form, &$form_state) {
-  $date_regexp = '/\d{4}-\d{2}-\d{2} \d{2}:\d{2}/';  //TO-DO allow for this to be set for dates:  full, including time, to just year. (3 options)
+  //$date_regexp = '/\d{4}-\d{2}-\d{2} \d{2}:\d{2}/';  //TO-DO allow for this to be set for dates:  full, including time, to just year. (2 options)
+  $date_regexp = '/\d{4}-\d{2}-\d{2}/';
   
   if (!preg_match($date_regexp, $form_state['values']['start_date'])) {
-		form_set_error('event_start', t('You must enter a start date in the form (YYYY-MM-DD HH:MM) e.g. 2010-11-04 15:58.'));
+		//form_set_error('event_start', t('You must enter a start date in the form (YYYY-MM-DD HH:MM) e.g. 2010-11-04 15:58.'));
+		form_set_error('event_start', t('You must enter a start date in the form (YYYY-MM-DD) e.g. 2010-11-04'));
   }
   
   if (!empty($form_state['values']['end_date']) and !preg_match($date_regexp, $form_state['values']['end_date'])) {
-		form_set_error('event_end', t('You must enter an end date in the form (YYYY-MM-DD HH:MM) e.g. 2010-11-05 17:00.'));
+		form_set_error('event_end', t('You must enter an end date in the form (YYYY-MM-DD) e.g. 2010-11-05'));
   }
   
   if (!empty($form_state['values']['end_date']) and (strtotime($form_state['values']['start_date']) > strtotime($form_state['values']['end_date']))) {
