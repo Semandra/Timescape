@@ -551,6 +551,7 @@ function Timescape_upload_second_form($form, &$form_state) {
 		drupal_set_message(t("File Upload Successful"));
 		
 		$db_columns = array('title', 'start_date', 'end_date', 'late_start', 'early_end','duration_event', 'category', 'location','sub_title','description','sub_text','caption','image_URL','link_URL');
+		$form_state['storage']['db_col_num'] = sizeof($db_columns);  // TODO -- NEED length of array
 		
 		$file = file_load($form_state['storage']['file_info']);
 		//$filePath = file_create_url($file->uri);
@@ -621,14 +622,24 @@ function Timescape_upload_second_form_submit($form, &$form_state) {
   $values = $form_state['values'];
   $form_state['rebuild'] = TRUE; //Important!
   $csv = $form_state['storage']['data'];
+  $num_cols = $form_state['storage']['db_col_num'];
   
+ // echo "<pre>";
+//  	print_r($values);
+//  echo "</pre>";
+
   // Create the key map that matches columns between timescape database and inport columns
 	$key_map = array();
 	$i=0;
-	for ($i=0; $i<10; $i++){
+	for ($i=0; $i < $num_cols; $i++){
 		$key_map[$i] = ($values['col'.$i]) ? $values['col'.$i] : NULL;
-		//drupal_set_message(t('In the loop...' . $i . '  -  ' . $key_map[$i]));
+		drupal_set_message(t('In the loop...' . $i . '  -  ' . $key_map[$i]));
 	}
+  
+ //   echo "<pre>";
+//  	print_r($key_map);
+//  echo "</pre>";
+  
   
   //----------- Load File ----------------------
   	
@@ -660,18 +671,33 @@ function Timescape_upload_second_form_submit($form, &$form_state) {
 		$input = "";
 		for ($k=0; $k < count($key_map); $k++) { //for each mapping get the data from $csv		
 			if ($key_map[$k]){
-				if ($k === 1){     //If this is a date input then convert string to epoch time
-					$input = strtotime($csv[$j][$key_map[$k]-1]); 
+				
+				//$input = ($csv[$j][$key_map[$k]-1] && $k > 0 && $k < 5 ) ? strtotime($csv[$j][$key_map[$k]-1]) : NULL;
+			if ($k > 0 && $k < 5 ){     //If this is a date input then convert string to epoch time
+					//$input = strtotime($csv[$j][$key_map[$k]-1]);
+					$input = ($csv[$j][$key_map[$k]-1]) ? strtotime($csv[$j][$key_map[$k]-1]) : NULL;
 				} else {
-					$input = $csv[$j][$key_map[$k]-1]	;
+					$input = $csv[$j][$key_map[$k]-1];
 				}
-				array_push ($new, $input);
 			}else{
-				array_push ($new, NULL);
-			}	
+				$input = ($k === 5) ? 0  : ""; // Set the default for "duration" to no
+				/*if ($k === 5) {
+					$input = 0;
+				}else{
+					$input = NULL;
+				}*/
+			}
+			array_push ($new, $input);
 		}
+		global $user;
+		array_push ($new, $user->name, time());
 		array_push ($data, $new);
 	}
+	
+	echo "<pre>";
+  print_r($data);
+ // print_r($values);
+  echo "</pre>";
 	 //========= Validate data fields & add defaults ============
 	// Cycle through the data and validate that matchings are proper format 
 	// Minimum required: title, start (all other fields can be blank)
@@ -745,70 +771,43 @@ function Timescape_upload_third_form_submit($form, &$form_state) {
   $form_state['rebuild'] = TRUE; //Important!
   $data = $form_state['storage']['data'];
   
-//  echo "<pre>";
-//  print_r($data);
-//  echo "</pre>";
+  echo "<pre>";
+  print_r($data);
+ // print_r($values);
+  echo "</pre>";
   drupal_set_message(t('Import data verified'));
   //------ processing to add data into Timescape database table -----------
   
   
   // If it is REPLACE current databae then... first clear the table
   
-  //ADD new values to database 
-  
-  $trn = db_transaction();
-  global $user;
-  for ($z=1; $z < count($data); $z++){
-	  drupal_set_message(t('Added...' . $data[$z][0]), 'warning');
-	  
-	  try {
-
-    $fields = array('title' => $data[$z][0],  
-                 'start_date' => $data[$z][1], 
-                 'end_date' => $data[$z][2], 
-				'late_start' => $data[$z][3], 
-				'early_end' => $data[$z][4],
-                 'duration_event' => $data[$z][5],
-				 'category' => $data[$z][6],
-				 'location' => $data[$z][7],
-				 'sub_title' => $data[$z][8],
-				 'description' => $data[$z][9], 
-				 'sub_text' => $data[$z][10],
-				 'caption' => $data[$z][11],
-				 'image_URL' => $data[$z][12],
-				 'link_URL' => $data[$z][13],
-                 );
-/*	  if (!$form_state['values']['id']) {
-		  $fields['created_by'] = $user->name;
-		  $fields['created_at'] = time();
-		  $id = db_insert('timescape_event')
-						  ->fields($fields)
-						  ->execute();
-		} else {
-		  $fields['updated_by'] = $user->name;
-		  $fields['updated_at'] = time();
-		  $id = db_update('timescape_event')
-						  ->fields($fields)
-						  ->condition('id', $form_state['values']['id'], '=')
-						  ->execute();
-		}*/
-	  }
-	  catch (Exception $e) {
-		$trn->rollback();
-		watchdog_exception('type', $e);
-	  }
-  
+  if ($values['add_type'] == 1) {
+	   drupal_set_message(t('Deleted Existing Data!'),'warning');
+	   $result = db_truncate('timescape_event')->execute();
+  } else {
+	  drupal_set_message(t('I want to add to current data'));
   }
   
+  //ADD new values to database 
   
+//  $trn = db_transaction();
+  global $user;
   
+   $fields = array('title', 'start_date', 'end_date', 'late_start', 'early_end','duration_event','category','location','sub_title','description','sub_text','caption','image_URL','link_URL','created_by','created_at');
+  
+	$query = db_insert('timescape_event')->fields($fields);
+	foreach ($data as $record) {
+	  $query->values($record);
+	}
+	$query->execute();
+  
+
   // If errors occured, Alert the user....
   
   
   // If no errors, show finish screen (options to go back to admin or close)
-  
-}
 
+}
 	
 
 /**
