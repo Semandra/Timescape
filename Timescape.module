@@ -670,22 +670,23 @@ function Timescape_upload_second_form_submit($form, &$form_state) {
 		$new = array();
 		$input = "";
 		for ($k=0; $k < count($key_map); $k++) { //for each mapping get the data from $csv		
-			if ($key_map[$k]){
-				
+			if ($key_map[$k]){ //if it is a mapped value then process			
 				//$input = ($csv[$j][$key_map[$k]-1] && $k > 0 && $k < 5 ) ? strtotime($csv[$j][$key_map[$k]-1]) : NULL;
-			if ($k > 0 && $k < 5 ){     //If this is a date input then convert string to epoch time
+				if ($k > 0 && $k < 5 ){     //If this is a date input then convert string to epoch time
 					//$input = strtotime($csv[$j][$key_map[$k]-1]);
 					$input = ($csv[$j][$key_map[$k]-1]) ? strtotime($csv[$j][$key_map[$k]-1]) : NULL;
 				} else {
 					$input = $csv[$j][$key_map[$k]-1];
 				}
 			}else{
-				$input = ($k === 5) ? 0  : ""; // Set the default for "duration" to no
-				/*if ($k === 5) {
+				if ($k > 0 && $k < 5) {
+					$input = NULL;
+				}
+				elseif($k === 5) {
 					$input = 0;
 				}else{
-					$input = NULL;
-				}*/
+					$input = "";
+				}
 			}
 			array_push ($new, $input);
 		}
@@ -742,7 +743,7 @@ function Timescape_upload_third_form($form, &$form_state) {
 			 '#collapsible' => FALSE,
 			 '#collapsed' => FALSE,
 		  );
-	$active = array(0 => t('ADD new uploaded events to Timescape dataset'), 1 => t('REPLACE existing data set with uploaded data'));  
+	$active = array(0 => t('ADD new uploaded events to Timescape dataset (Default)'), 1 => t('REPLACE all existing data set with uploaded data'));  
 	$form['ts_save_group']['add_type'] = array(
 				'#type' => 'radios',
 				'#title' => t('Select upload'),
@@ -771,10 +772,10 @@ function Timescape_upload_third_form_submit($form, &$form_state) {
   $form_state['rebuild'] = TRUE; //Important!
   $data = $form_state['storage']['data'];
   
-  echo "<pre>";
+/*  echo "<pre>";
   print_r($data);
  // print_r($values);
-  echo "</pre>";
+  echo "</pre>";*/
   drupal_set_message(t('Import data verified'));
   //------ processing to add data into Timescape database table -----------
   
@@ -805,7 +806,10 @@ function Timescape_upload_third_form_submit($form, &$form_state) {
   // If errors occured, Alert the user....
   
   
-  // If no errors, show finish screen (options to go back to admin or close)
+  // If no errors, show finish screen (options to go back to admin and show message)
+  
+ // $form_state['storage']['step'] = 'Timescape_admin';
+  // Clear storage values 
 
 }
 	
