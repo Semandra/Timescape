@@ -17,10 +17,11 @@
 */
 
 #Timescape .Timescape_active {
-  border: 1px solid #333;
-  height: 700px;
-  min-width: 400px;
+ /*border: 1px solid #333;
+  height: 200px;
+   min-width: 400px;
  font-size: 14px;
+ width: 400px;//
 }
 
 #Timescape .timeline-band-0 .timeline-ether-bg {
@@ -52,6 +53,9 @@
 .timeline-event-bubble-body td {
     padding: 0 !important;
 }
+
+/* =====================    Timescape Administration Form    ========================== */
+
 
 
 
@@ -143,6 +147,8 @@
 	background-color: #fff;
 	position:relative;
 }
+
+
 
 
 

@@ -34,15 +34,15 @@ function Timescape_onLoad(XML_source, target_id) {
   //var d = Timeline.DateTime.parseGregorianDateTime("2015"); // Depreciated -- now set in admin
 
 
-  var bandInfos = [
+ /**/ var bandInfos = [
   // Main timeline band where data points are presented in detail
     Timeline.createBandInfo({
-      width:          "90%",  //Sets the height of the display band relative to the size of the box height
+      width:          tsPrmWdth + "%",  //Sets the height of the display band relative to the size of the box height
       eventSource:    eventSource,
-      intervalUnit:   Timeline.DateTime.YEAR, 
+      intervalUnit:   tsPrmIntvl, //Timeline.DateTime.YEAR, 
       intervalPixels: 100,
 	  trackHeight: 900,
-	  direction: Timeline.FORWARD,
+	  direction: tsDirction,
 	  date:           d,
 	  theme:          theme, // Apply the theme variables as set above for data points
       timeZone:       3
@@ -50,13 +50,15 @@ function Timescape_onLoad(XML_source, target_id) {
 	// Secondary timeline showing a broader overview of datapoints
     Timeline.createBandInfo({
       overview:       true,
-      width:          "10%", 
+      width:          tsSecWdth + "%", 
       eventSource:    eventSource,
 	  date:           d,
-      intervalUnit:   Timeline.DateTime.DECADE, 
+      intervalUnit:   tsScndIntvl, 
       intervalPixels: 50
     })
   ];
+  //console.log ("WHATS THIS: " + Timeline.FORWARD);
+   console.log (Timeline.DateTime);
   bandInfos[1].syncWith = 0;
   bandInfos[1].highlight = true;
   tl = Timeline.create(document.getElementById(target_id), bandInfos);  

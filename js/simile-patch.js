@@ -1,8 +1,8 @@
 // Customization patch of Similie-timeline 2.4.1
 // Reverse customizations based on mnosal code here: https://groups.google.com/forum/#!topic/simile-widgets/zNYGSLwwHW4
 
-console.log("I've loaded the patch");
-console.log(Timeline);
+//console.log("I've loaded the patch");
+//console.log(Timeline);
 Timeline.REVERSE=0;
 Timeline.FORWARD=1;
 

@@ -91,12 +91,18 @@ function Timescape_jQuery() {
 
   })(jQuery);
   
-    //Used for timeline centering links - Semandra
+  //Used for timeline centering links - Semandra
 	function centerTimeline(year) {
 	  tl.getBand(0).setCenterVisibleDate(new Date(year, 0, 1));
   };
    var d = Timeline.DateTime.parseGregorianDateTime('" . variable_get('ts_center_year', '1900') . "');
    
+   var tsPrmWdth = " . variable_get('ts_primary_height', '80') . "; // Height primary interval
+	var tsSecWdth = " . variable_get('ts_secondary_height', '20') . "; // Height secondary interval
+	var tsPrmIntvl = " . variable_get('ts_primary_interval', '7') . "; // Display primary interval 
+	var tsScndIntvl = " .variable_get('ts_secondary_interval', '8') . "; // Display secondary interval
+	var tsDirction = " .variable_get('ts_event_paint_direction', '1') . ";// Direction of event stacking
+
    var theme = Timeline.ClassicTheme.create(); // alter the defaults of the custom theme
 	  theme.event.bubble.width = 450;   // modify it
 	  theme.event.bubble.height = 400;
@@ -104,14 +110,17 @@ function Timescape_jQuery() {
 	  theme.event.track.gap = 5;
 	  theme.event.tape.height = " . variable_get('ts_tape_height') . ";
 	  theme.event.duration.impreciseOpacity = 100;
-	  theme.event.instant.impreciseOpacity = 100;
+	  theme.event.instant.impreciseOpacity = 100; 
+
+
+   
   ";
   return $script;
 }
 
 /**
  * Creates custom styles for timeline from Module settings
- *
+ * Generates a css page which is then loaded into the header (Timescape.module line 72)
 */
 
 function Timescape_CSS($cusCss = NULL) {
@@ -122,9 +131,26 @@ function Timescape_CSS($cusCss = NULL) {
 	//$font-size = variable_get('ts_timeline_event_colors');
 	//$font = variable_get('ts_timeline_event_colors');
 
-	$cusCss = (variable_get('ts_timeline_border')) ? "#Timescape .Timescape_active {
+	/*$cusCss = (variable_get('ts_timeline_border')) ? "#Timescape .Timescape_active {
 					border:" . variable_get('ts_timeline_border') . ";
-					}" : "";
+					}" : "";*/
+	//$cusCss = "#Timescape .Timescape_active {";
+		// border
+		// width
+		// height
+	$cusCss .= "#Timescape .Timescape_active {";
+		$cusCss .= (variable_get('ts_tl_width')) ? "width:" . variable_get('ts_tl_width') . ";" : "";
+		$cusCss .= (variable_get('ts_tl_height')) ? "height:" . variable_get('ts_tl_height') . ";" : "";
+		$cusCss .= (variable_get('ts_timeline_border')) ? "border:" . variable_get('ts_timeline_border') . ";" : "";
+	$cusCss .= " }";
+	
+	$cusCss .= "#Timescape .timeline-band-0 .timeline-ether-bg {";
+		$cusCss .= (variable_get('ts_tl_prm_bg_color')) ? "background-color:" . variable_get('ts_tl_prm_bg_color') . ";" : "";
+	$cusCss .= " }";
+	$cusCss .= "#Timescape .timeline-band-1 .timeline-ether-bg {";
+		$cusCss .= (variable_get('ts_tl_sec_bg_color')) ? "background-color:" . variable_get('ts_tl_sec_bg_color') . ";" : "";
+	$cusCss .= " }";
+	
 	
 	// Create styles for each of the categories
 	foreach ($ts_categories as $ts_category){
@@ -184,7 +210,9 @@ function Timescape_CSS($cusCss = NULL) {
 				}";
 	
 			};
-
+			
+			$cusCss .= (variable_get('ts_user_styles')) ? variable_get('ts_user_styles') : "";
+			
 
  	 drupal_add_http_header('Content-Type', 'text/css');
 
