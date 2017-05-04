@@ -213,8 +213,19 @@ function Timescape_CSS($cusCss = NULL) {
 			
 			$cusCss .= (variable_get('ts_user_styles')) ? variable_get('ts_user_styles') : "";
 			
-
- 	 drupal_add_http_header('Content-Type', 'text/css');
+	// Hide bubble title if turned off in settings
+	if (!variable_get('ts_show_bubble_title')){
+		$cusCss .= ".timeline-event-bubble-title { display: none;}";		
+	} 
+	
+	// Hide Edit/Delete link if not logged-in
+	if (!variable_get('ts_show_bubble_title')){
+			//if 'false' add custom styles to hide div.timeline-event-bubble-title
+		drupal_set_message(t("Don't show the bubble titles"));
+		$cusCss .= ".timeline-event-bubble-title { display: none;}";		
+	} 	
+	
+ 	drupal_add_http_header('Content-Type', 'text/css');
 
   if (isset($cusCss)) {
     echo $cusCss;
@@ -319,9 +330,11 @@ function Timescape_JSON($var = NULL) {
 	$srtKwn = "";
 	$endKwn = "";
 	$btwn = "";
-	//if (variable_get('ts_show_title')){
+	if (!variable_get('ts_show_bubble_title')){
 			//if 'false' add custom styles to hide div.timeline-event-bubble-title
-	//}
+		drupal_set_message(t("Don't show the bubble titles"));
+		
+	}
 
 	foreach ($events as $event) {
 		//format information [text in popup bubble] using information fields
@@ -366,8 +379,8 @@ function Timescape_JSON($var = NULL) {
 		//}
 		
 //********--TODO -- Show only to those with admin privledges
-			$information .= "<div id='evntEdtBtns'><span class='tinybutton'> " . l(t('Edit'), 'timescape/edit/' . $event['id']) . " </span>";
-			$information .= "<span class='tinybutton'> " . l(t('Delete'), 'timescape/delete/' . $event['id']) . " </span></div>";
+		$information .= "<div id='evntEdtBtns'><span class='tinybutton'> " . l(t('Edit'), 'timescape/edit/' . $event['id']) . " </span>";
+		$information .= "<span class='tinybutton'> " . l(t('Delete'), 'timescape/delete/' . $event['id']) . " </span></div>";
 		
 		$node['title'] = $event['title'];
 		$node['start'] = $event['start_date'];

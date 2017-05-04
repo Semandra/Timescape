@@ -448,11 +448,16 @@ function Timescape_admin($form, &$form_state){
 	 '#collapsed' => TRUE,
   );  
   
-  // TODO --- Show Title?
+  // Show Title in bubble (default true)
+  $form['ts_bubble_group']['ts_show_bubble_title'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show main title'),
+	'#default_value' => variable_get('ts_show_bubble_title', true),
+  );
   
   // TODO -- Show Category?
   
-  
+  // Show Date ranges in bubble (default true)
   $form['ts_bubble_group']['ts_show_all_dates'] = array(
     '#type' => 'checkbox',
     '#title' => t('Display full dates '),
