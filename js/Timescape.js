@@ -2,7 +2,7 @@
 
 /**
  * This file is part of Timescape developed by Wolf Maul and Semandra Inc. 
- * 2014-16 - http://semandra.com.
+ * 2014-17 - http://semandra.com.
  * 
  * Timescape is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

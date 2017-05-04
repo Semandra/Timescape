@@ -219,10 +219,9 @@ function Timescape_CSS($cusCss = NULL) {
 	} 
 	
 	// Hide Edit/Delete link if not logged-in
-	if (!variable_get('ts_show_bubble_title')){
-			//if 'false' add custom styles to hide div.timeline-event-bubble-title
-		drupal_set_message(t("Don't show the bubble titles"));
-		$cusCss .= ".timeline-event-bubble-title { display: none;}";		
+	if (!user_is_logged_in()){
+		drupal_set_message(t("User is logged in"));
+		$cusCss .= "#evntEdtBtns { display: none;}";		
 	} 	
 	
  	drupal_add_http_header('Content-Type', 'text/css');
@@ -330,11 +329,6 @@ function Timescape_JSON($var = NULL) {
 	$srtKwn = "";
 	$endKwn = "";
 	$btwn = "";
-	if (!variable_get('ts_show_bubble_title')){
-			//if 'false' add custom styles to hide div.timeline-event-bubble-title
-		drupal_set_message(t("Don't show the bubble titles"));
-		
-	}
 
 	foreach ($events as $event) {
 		//format information [text in popup bubble] using information fields
