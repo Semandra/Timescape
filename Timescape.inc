@@ -297,7 +297,7 @@ function Timescape_CSS($cusCss = NULL) {
 
 
 /**
- * Formats dates for bubble output
+ * Formats dates for bubble output from MDY, ymd, and unix to d/m/Y
  *
 */
 function Date_formatter ($dateString, $dFormat){
@@ -308,9 +308,15 @@ function Date_formatter ($dateString, $dFormat){
 	if ($dFormat == 'ymd') {
 		return $date->format('Y-m-d');
 	}
+	if ($dFormat == 'unix') {
+		return $date("d/m/Y", $dateString);
+	}
 	return $date->format('d/m/Y');
 }
 
+function Date_formatter_unix ($unixTime){
+	return gmdate("Y-m-d", $unixTime);
+}
 
 /**
  * Generates timeline JSON from Timescape_event table
@@ -341,7 +347,7 @@ function Timescape_JSON($var = NULL) {
 		if (variable_get('ts_show_all_dates')){
 			$information .= "<div id='dateRange'>";
 			$information .= "<span class='full-event-date'> " . Date_formatter($event['start_date'],$dFormat) . " </span>";
-			if ($event['start_date'] != $event['end_date']) {
+			if ($event['end_date']) {
 				$information .= " to <span class='full-event-date'> " . Date_formatter($event['end_date'],$dFormat) . " </span>";
 			}
 			$information .= "</div>";
@@ -353,19 +359,33 @@ function Timescape_JSON($var = NULL) {
 
 		//===========================================================================
 		
-		$information .= "<p>Start: " . $event['start_date'] . " Late S: " . $event['late_start']  . " Earl E: "  . $event['early_end'] . " End: " . $event['end_date']  . " </p>";
+		// Explicit display of all timeline start and end dates
+		if (variable_get('ts_event_timeline_dates')){
+			$information .= "<p>Start: " . $event['start_date'];
+			if ($event['late_start']){
+				$information .= " - Latest start: " . $event['late_start'];
+			}
+			if ($event['early_end']){
+				$information .= " - Earliest end: "  . $event['early_end'];
+			}
+			if ($event['end_date']){
+				$information .= " - End: " . $event['end_date'];
+			}
+			$information .= "</p>";
+		}
+		
 		
 		if (variable_get('ts_event_date_summary')){
-			$information .= "<span class='event-date-summary'> " . $event['created_by'] . " </span >";
+			$information .= "<span class='event-date-summary'> Created: " . $event['created_by'] . " </span >";
 		}
 		if (variable_get('ts_event_date_summary')){
-			$information .= "<span  class='event-date-summary'> " . $event['created_at'] . " </span >";
+			$information .= "<span  class='event-date-summary'> " . Date_formatter_unix($event['created_at']) . " </span >";
 		}
-		if (variable_get('ts_event_date_summary')){
-			$information .= "<span  class='event-date-summary'> " . $event['updated_by'] . " </span >";
+		if (variable_get('ts_event_date_summary') && $event['updated_at'] != 0){
+			$information .= "<span  class='event-date-summary'> - Last updated: " . $event['updated_by'] . " </span >";
 		}
-		if (variable_get('ts_event_date_summary')){
-			$information .= "<span  class='event-date-summary'> " . $event['updated_at'] . " </span >";
+		if (variable_get('ts_event_date_summary') && $event['updated_at'] != 0){
+			$information .= "<span  class='event-date-summary'> " . Date_formatter_unix($event['updated_at']) . " </span >";
 		}
 		
 		//if (variable_get('ts_show_link')){

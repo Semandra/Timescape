@@ -460,7 +460,7 @@ function Timescape_admin($form, &$form_state){
   // Show Date ranges in bubble (default true)
   $form['ts_bubble_group']['ts_show_all_dates'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Display full dates '),
+    '#title' => t('Display formated full dates for start and end'),
 	'#default_value' => variable_get('ts_show_all_dates', true),
   );
   $form['ts_bubble_group']['ts_date_format'] = array(
@@ -474,13 +474,17 @@ function Timescape_admin($form, &$form_state){
 	'#default_value' => variable_get('ts_date_format', true),
   );
   
-  $form['ts_bubble_group']['ts_event_date_summary'] = array(
+  $form['ts_bubble_group']['ts_event_timeline_dates'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Show date summary line'),
-	'#default_value' => variable_get('ts_event_date_summary', false),
+    '#title' => t('Show all timeline start and end dates'),
+	'#default_value' => variable_get('ts_event_timeline_dates', false),
   );
   
-
+  $form['ts_bubble_group']['ts_event_date_summary'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show record create/edit date summary line'),
+	'#default_value' => variable_get('ts_event_date_summary', false),
+  );
 	
 	
 	return system_settings_form($form);
