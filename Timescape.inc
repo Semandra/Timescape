@@ -154,6 +154,9 @@ function Timescape_CSS($cusCss = NULL) {
 	
 	// Create styles for each of the categories
 	foreach ($ts_categories as $ts_category){
+		#lower case and spaces to underscores
+		$ts_category = str_replace(' ', '_', strtolower($ts_category));
+		
 		$evt_color = variable_get('ts_color_p_' . $ts_category, '');
 		$evt_color_band = variable_get('ts_color_s_' . $ts_category, '');
 		$tape = variable_get('ts_tape_height');
@@ -339,10 +342,14 @@ function Timescape_JSON($var = NULL) {
 	foreach ($events as $event) {
 		//format information [text in popup bubble] using information fields
 		$information = '';
+		
 		$information .= "<p class='sub-title'> " . $event['sub_title'] . " </p>";
+		
 		$information .= "<p class='event-category'> " . $event['category'] . " </p>";
-		$information .= "<p class='sub-title'> " . $event['location'] . " </p>";
-		$information .= $event['description'];
+		
+		$information .= "<p class='sub-title location'> " . $event['location'] . " </p>";
+		
+		$information .= "<p class='description'> " . $event['description'] . " </p>";
 	
 		if (variable_get('ts_show_all_dates')){
 			$information .= "<div id='dateRange'>";
@@ -379,7 +386,11 @@ function Timescape_JSON($var = NULL) {
 			$information .= "<span class='event-date-summary'> Created: " . $event['created_by'] . " </span >";
 		}
 		if (variable_get('ts_event_date_summary')){
-			$information .= "<span  class='event-date-summary'> " . Date_formatter_unix($event['created_at']) . " </span >";
+			if ($event['created_at']) {
+				$information .= "<span  class='event-date-summary'> " . Date_formatter_unix($event['created_at']) . " </span >";
+			}else{
+				$information .= "<span  class='event-date-summary'> unknown </span >";
+			}
 		}
 		if (variable_get('ts_event_date_summary') && $event['updated_at'] != 0){
 			$information .= "<span  class='event-date-summary'> - Last updated: " . $event['updated_by'] . " </span >";
@@ -392,7 +403,6 @@ function Timescape_JSON($var = NULL) {
 		//	$information .= "<a href='" . $event['link'] . "'></h1>";
 		//}
 		
-//********--TODO -- Show only to those with admin privledges
 		$information .= "<div id='evntEdtBtns'><span class='tinybutton'> " . l(t('Edit'), 'timescape/edit/' . $event['id']) . " </span>";
 		$information .= "<span class='tinybutton'> " . l(t('Delete'), 'timescape/delete/' . $event['id']) . " </span></div>";
 		
@@ -447,45 +457,13 @@ function Timescape_JSON($var = NULL) {
 		//$endKwn = " ";
 		//$btwn = "between ";
 		
-		$node['classname'] = $srtKwn . $endKwn . $btwn . $event['category'] . "_event "; //$event['name'];
+		$event_category = str_replace(' ', '_', strtolower($event['category']));
+		
+		$node['classname'] = $srtKwn . $endKwn . $btwn . $event_category . "_event "; //$event['name'];
 	
 		
 		array_push($var['events'], $node); 
 	}
-	
-	//-------------- load JSON file if URL provided ---------------
-	// TO-DO This linked JSON processing is incomplete -- field names and other process is not being performed
-	//
-	
-	if (variable_get('ts_linked_file_path')){
-	//	$fileJSON = variable_get('ts_linked_file_path');
-		$url = variable_get('ts_linked_file_path');
-		$request = drupal_http_request($url);
-		$json_response = drupal_json_decode($request->data);
-		
-		foreach ($json_response as $response_data) {
-			
-			$information = '';
-			//$information .= "<h1>" . $response_data['title'] . "</h1>";
-			
-			if (variable_get('ts_show_all_dates')){
-				$information .= "<div>";
-				$information .= "<span class='full-event-date'> " . $response_data['start'] . " </span>";
-				$information .= "<span class='full-event-date'> " . $response_data['end'] . " </span>";
-				$information .= "</div>";
-			}
-			
-			$response_data['description'] = $information;
-			
-	  		array_push($var['events'], $response_data);
-		
-		
-			
-			
-		}
-		
-	}
-	
 	
 	// We are returning JSON, so tell the browser.
  	 drupal_add_http_header('Content-Type', 'application/json');
@@ -549,12 +527,33 @@ function _Timescape_load($id = NULL) {
       }
       array_push($events, $record);
     }
-    return $events;
+    //return $events;
   }
   catch (Exception $e) {
     drupal_set_message($e, 'error');
     return array();
   }
+  if (variable_get('ts_json_file_path')){
+	//	$fileJSON = variable_get('ts_linked_file_path');
+		$url = variable_get('ts_json_file_path');
+		$request = drupal_http_request($url);
+		$json_response = drupal_json_decode($request->data);
+		
+		$default = [
+			"updated_by" => false,
+			"updated_at" => false
+  		];
+		
+		foreach ($json_response as $response_entry) {
+			
+			//drupal_set_message('<pre>'. print_r($response_entry, true) .'</pre>');
+			array_push($events, $response_entry);
+		}
+		
+		return $events;
+	}else{
+		return $events;
+	}
 }
 
 
@@ -680,15 +679,15 @@ function _Timescape_Input($form, &$form_state, $values) {
     '#description' => t("Create new category (required for first event). Select 'other' from category to create a new category name."),
     '#default_value' => $values['category']
     );
-	$form['location'] = 
-		array('#type' => 'textfield',
-		'#title' => t('Location (optional)'),
-		'#size' => 75,
-		'#maxlength' => 255,
-		'#description' => t("Location is added to the title in the popup bubble."),
-		'#required' => FALSE,
-		  '#default_value' => $values['location']
-    );
+  $form['location'] = 
+	  array('#type' => 'textfield',
+	  '#title' => t('Location (optional)'),
+	  '#size' => 75,
+	  '#maxlength' => 255,
+	  '#description' => t("Location is added to the title in the popup bubble."),
+	  '#required' => FALSE,
+		'#default_value' => $values['location']
+  );
   $form['sub_title'] = 
     array('#type' => 'textfield',
     '#title' => t('Subtitle'),
@@ -731,16 +730,20 @@ function _Timescape_Input($form, &$form_state, $values) {
     '#required' => FALSE,
 	  '#default_value' => $values['image_URL']
     );
-	$form['link_URL'] = 
-    array('#type' => 'textfield',
-    '#title' => t('Link URL'),
-    '#size' => 75,
-    '#maxlength' => 255,
-    '#description' => t("Link URL (Title becomes link in popup bubble)."),
-    '#required' => FALSE,
-	  '#default_value' => $values['link_URL']
-    );
-
+	
+	// URL link field -- becomes link for title in bubble popup
+	if (variable_get('ts_show_url_in_title')){
+		$form['link_URL'] = 
+		array('#type' => 'textfield',
+		'#title' => t('Link URL'),
+		'#size' => 75,
+		'#maxlength' => 255,
+		'#description' => t("Link URL (Title becomes link in popup bubble)."),
+		'#required' => FALSE,
+		  '#default_value' => $values['link_URL']
+		);
+	}
+	
   $form['event_submit'] = 
     array('#type' => 'submit',
     '#value' => "Submit Form",

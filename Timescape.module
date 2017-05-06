@@ -253,12 +253,12 @@ function Timescape_admin($form, &$form_state){
   // If everything checks out, then submit this to the database function which will add all the entries
   //$file = file_load($form_state['values']['data_file']);
   
-  $form['ts_data_group']['ts_linked_file_path'] = array(
+  $form['ts_data_group']['ts_json_file_path'] = array(
     '#prefix' => '<div><h2></h2><p><a href="timescape/upload">Import Data</a> - Import CSV file and add to timescape</p></div>',
 	'#type' => 'textfield',
     '#title' => t('URL link to JSON file'),
 	'#description' => t('NOT FULLY FUNCTIONAL -- Optional. Note: Entries will not be editable from the timeline. See <a href="#">JSON format</a>'),
-    '#default_value' => variable_get('ts_linked_file_path', ''),
+    '#default_value' => variable_get('ts_json_file_path', ''),
   );
   
   // ----- Timeline Settings Group ----------
@@ -395,42 +395,49 @@ function Timescape_admin($form, &$form_state){
 	'#default_value' => variable_get('ts_timeline_border', '#aaa'),
   );
   
-	
-	
-		
-		// ------------- Event Dot and Bar Styles --------------------
-		  
-		$form['ts_style_group']['ts_evt_style_table'] = array(
-			'#type' => 'fieldset',
-			'#title' => t('Event Tape Styles'),
-			'#prefix' => '<table><tr><th>Category Name</th><th>Primary Colour</th><th></th><th>Secondary Colour</th><th></th></tr>',
-			'#suffix' => '</table>',
-			 '#collapsible' => FALSE,
-			 '#collapsed' => FALSE,
-		  ); 
-	
-		foreach ($ts_categories as $ts_category){
-			$form['ts_style_group']['ts_evt_style_table']['ts_color_p_' . $ts_category] = array(
-			//$form['ts_style_group']['ts_evt_style_table'][$i]['ts_color_p'] = array(
-			//'#title' => t($category),
-			'#prefix' => '<tr><td>' . $ts_category . "</td><td>",
-			'#suffix' => '</td><td><div style="height:20px;width:20px;background-color:'. variable_get('ts_color_p_' . $ts_category, '') .'"></div></td>',
-			//'#suffix' => '</td><td><div style="height:20px;width:20px;background-color:'. variable_get('ts_color_p') .'"></div></td>',
-			'#type' => 'textfield',
-			'#size' => '20',
-			'#default_value' => variable_get('ts_color_p_' . $ts_category, '#205092'),
-			//'#default_value' => variable_get('ts_color_p', ''),
-		  );
-		  $form['ts_style_group']['ts_evt_style_table']['ts_color_s_' . $ts_category] = array(
-			//'#title' => t($category),
-			'#prefix' => '<td>',
-			'#suffix' => '</td><td><div style="height:20px;width:20px;background-color:'. variable_get('ts_color_s_' . $ts_category, '') .'"></div></td>',
-			'#type' => 'textfield',
-			'#size' => '20',
-			'#default_value' => variable_get('ts_color_s_' . $ts_category, '#A1C0EA'),
-		  );
-		  $i++;
+
+	// ================ Event Dot and Bar Styles ========================
+	  
+	$form['ts_style_group']['ts_evt_style_table'] = array(
+		'#type' => 'fieldset',
+		'#title' => t('Event Tape Styles'),
+		'#prefix' => '<table><tr><th>Category Name</th><th>Primary Colour</th><th></th><th>Secondary Colour</th><th></th></tr>',
+		'#suffix' => '</table>',
+		 '#collapsible' => FALSE,
+		 '#collapsed' => FALSE,
+	  ); 
+
+	foreach ($ts_categories as $ts_category){
+		if (!$ts_category) {
+			$ts_category = 'default';
 		}
+		# Replace white spaces
+		$ts_category = str_replace(' ', '_', strtolower($ts_category));
+		
+		$form['ts_style_group']['ts_evt_style_table']['ts_color_p_' . $ts_category] = array(
+		//$form['ts_style_group']['ts_evt_style_table'][$i]['ts_color_p'] = array(
+		//'#title' => t($category),
+		'#prefix' => '<tr><td>' . $ts_category . "</td><td>",
+		'#suffix' => '</td><td><div style="height:20px;width:20px;background-color:'. variable_get('ts_color_p_' . $ts_category, '') .'"></div></td>',
+		//'#suffix' => '</td><td><div style="height:20px;width:20px;background-color:'. variable_get('ts_color_p') .'"></div></td>',
+		'#type' => 'textfield',
+		'#size' => '20',
+		'#default_value' => variable_get('ts_color_p_' . $ts_category, '#000'),
+		//'#default_value' => variable_get('ts_color_p', ''),
+	  );
+	  $form['ts_style_group']['ts_evt_style_table']['ts_color_s_' . $ts_category] = array(
+		//'#title' => t($category),
+		'#prefix' => '<td>',
+		'#suffix' => '</td><td><div style="height:20px;width:20px;background-color:'. variable_get('ts_color_s_' . $ts_category, '') .'"></div></td>',
+		'#type' => 'textfield',
+		'#size' => '20',
+		'#default_value' => variable_get('ts_color_s_' . $ts_category, '#999'),
+	  );
+	  drupal_set_message('<pre>'. print_r($ts_category, true) .'</pre>');
+	  $i++;
+	}
+	
+	drupal_set_message('<pre>'. print_r($ts_categories, true) .'</pre>');
 		
 	$form['ts_style_group']['ts_user_styles'] = array(
     '#type' => 'textarea',
@@ -455,7 +462,53 @@ function Timescape_admin($form, &$form_state){
 	'#default_value' => variable_get('ts_show_bubble_title', true),
   );
   
-  // TODO -- Show Category?
+  // Use URL in bubble title (default true)
+  $form['ts_bubble_group']['ts_show_url_in_title'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use a URL for title in bubble'),
+	'#default_value' => variable_get('ts_show_url_in_title', true),
+  );	
+  
+  // Show Subtitle in bubble (default true)
+  $form['ts_bubble_group']['ts_show_subtitle'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use title in bubble'),
+	'#default_value' => variable_get('ts_show_subtitle', true),
+  );	
+  
+  // Show Category in bubble (default true)
+  $form['ts_bubble_group']['ts_show_category'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use category in bubble'),
+	'#default_value' => variable_get('ts_show_category', true),
+  );	
+  
+  // Show Location in bubble (default true)
+  $form['ts_bubble_group']['ts_show_location'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use location in bubble popup'),
+	'#default_value' => variable_get('ts_show_location', true),
+  );	
+  // Show description (body text) in bubble (default true)
+  $form['ts_bubble_group']['ts_show_body_text'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use location in bubble popup'),
+	'#default_value' => variable_get('ts_show_body_text', true),
+  );	
+  // Show sub-text (below body text) in bubble (default true)
+  $form['ts_bubble_group']['ts_show_sub_text'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use below-body text in bubble popup'),
+	'#default_value' => variable_get('ts_show_sub_text', true),
+  );	
+  
+  // Show hover text in chart and bubble (default true)
+  $form['ts_bubble_group']['ts_show_hover_text'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Use hover text on timeline and in bubble popup'),
+	'#default_value' => variable_get('ts_show_hover_text', true),
+  );	
+ 
   
   // Show Date ranges in bubble (default true)
   $form['ts_bubble_group']['ts_show_all_dates'] = array(
@@ -482,10 +535,11 @@ function Timescape_admin($form, &$form_state){
   
   $form['ts_bubble_group']['ts_event_date_summary'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Show record create/edit date summary line'),
+    '#title' => t('Show entry create/edit date summary line'),
 	'#default_value' => variable_get('ts_event_date_summary', false),
   );
-	
+  
+  
 	
 	return system_settings_form($form);
 }
