@@ -14,6 +14,10 @@
  * along with Timescape.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+.timeline-copyright {
+	z-index: 100;
+}
+
 /* ------------------------ default classes for timeline events   ------------------------------- */
 .timeline-small-event-tape {
 	background-color: #205092;

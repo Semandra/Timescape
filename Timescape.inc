@@ -403,8 +403,10 @@ function Timescape_JSON($var = NULL) {
 		//	$information .= "<a href='" . $event['link'] . "'></h1>";
 		//}
 		
-		$information .= "<div id='evntEdtBtns'><span class='tinybutton'> " . l(t('Edit'), 'timescape/edit/' . $event['id']) . " </span>";
-		$information .= "<span class='tinybutton'> " . l(t('Delete'), 'timescape/delete/' . $event['id']) . " </span></div>";
+		if ($event['id']){
+			$information .= "<div id='evntEdtBtns'><span class='tinybutton'> " . l(t('Edit'), 'timescape/edit/' . $event['id']) . " </span>";
+			$information .= "<span class='tinybutton'> " . l(t('Delete'), 'timescape/delete/' . $event['id']) . " </span></div>";
+		}
 		
 		$node['title'] = $event['title'];
 		$node['start'] = $event['start_date'];
@@ -471,6 +473,7 @@ function Timescape_JSON($var = NULL) {
   if (isset($var)) {
     echo drupal_json_encode($var);
   }
+ 
 }
 
 
@@ -539,13 +542,7 @@ function _Timescape_load($id = NULL) {
 		$request = drupal_http_request($url);
 		$json_response = drupal_json_decode($request->data);
 		
-		$default = [
-			"updated_by" => false,
-			"updated_at" => false
-  		];
-		
 		foreach ($json_response as $response_entry) {
-			
 			//drupal_set_message('<pre>'. print_r($response_entry, true) .'</pre>');
 			array_push($events, $response_entry);
 		}
@@ -591,7 +588,7 @@ function _Timescape_Input($form, &$form_state, $values) {
 	  '#title' => t('Name of the timeline event (label)'),
 	  '#size' => 75,
 	  '#maxlength' => 255,
-	  '#description' => t("Enter the name of the event you want to log"),
+	  '#description' => t("Enter the name of the event you want to chart. [Note: HTML is okay. e.g. <i>Title</i>]"),
 	  '#required' => TRUE,
 	  '#default_value' => $values['title'],
 	  );
@@ -603,7 +600,7 @@ function _Timescape_Input($form, &$form_state, $values) {
 		'#title' => t('Start time'),
 		'#size' => 30,
 		'#maxlength' => 40,
-		'#description' => t("Enter the start time of the event (YYYY-MM-DD HH:MM)."),
+		'#description' => t("Enter the start time of the event (YYYY-MM-DD HH:MM). [Note: HH:MM is optional]"),
 		'#required' => TRUE,
 	  '#default_value' => $values['start_date']
     );

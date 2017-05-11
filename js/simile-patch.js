@@ -347,21 +347,25 @@ Timeline.DefaultEventSource.Event.prototype = {
             elmt.appendChild(img);
         }
         var divTitle = doc.createElement("div");
-        var textTitle = doc.createTextNode(title);
         if (link != null) {
             var a = doc.createElement("a");
             a.href = link;
-            a.appendChild(textTitle);
-            divTitle.appendChild(a);
+			a.innerHTML = title
+            divTitle.appendChild(a);			
         } else {
-            divTitle.appendChild(textTitle);
+		 	divTitle.innerHTML = title;
         }
+		console.log (theme.event.bubble.titleStyler)
         theme.event.bubble.titleStyler(divTitle);
         elmt.appendChild(divTitle);
+		
         var divBody = doc.createElement("div");
         this.fillDescription(divBody);
         theme.event.bubble.bodyStyler(divBody);
         elmt.appendChild(divBody);
+		
+		console.log (divBody)
+		
         var divTime = doc.createElement("div");
         this.fillTime(divTime, labeller);
         theme.event.bubble.timeStyler(divTime);
