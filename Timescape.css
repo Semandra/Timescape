@@ -16,6 +16,10 @@
  * along with Timescape.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#Timescape {
+	clear: both;
+}
+
 #Timescape .Timescape_active {
  /*border: 1px solid #333;
   height: 200px;
@@ -58,95 +62,6 @@
 
 
 
-
-/* =====================    Timeline Legend     ========================== */
-
-#timelineLegend {
-    height: 200px;
-    margin-left: 400px;
-    margin-top: -70px;
-	background-color: #fff;
-	padding: 0 0 0 30px;
-}
-#timelineLegend #legendCategoryWriting {
-	color: #009200 
-}
-#timelineLegend #legendCategoryLetter {
-	color: #3D00BC
-}
-#timelineLegend #legendCategoryArt {
-	color: #A40404 
-}
-#timelineLegend #legendCategoryLife {
-	color: #1096CF
-}
-
-#timelineLegend p{
-	text-transform: uppercase;
-	color: #555;	
-}
-#timelineDots p {
-	font-size: 12px;
-	margin: 2px;
-	text-transform:inherit;
-}
-
-#timelineCategories, #timelineDots {
-	float: left;
-	padding: 10px;
-	margin-top: 20px;
-}
-#timelineDots{
-    border: 1px solid #ccc;
-    margin: 10px 0 0 20px;
-    
-}
-
-#timelineDots .iconWrapper{
-	width:45px;
-}
-#timelineDots td {
-	padding-right: 5px;
-}
-
-#timelineDots td.icon div{
-	margin: auto;
-}
-
-#timelineLegend .legendItems{
-	height: 10px;
-    min-width: 0;
-    width: 6px;
-	border-color: #444;
-	background-image: linear-gradient(180deg, rgba(30, 30, 30, 0.3) 0%, rgba(30, 30, 30, 0.3) 100%);
-	
-}
-#timelineLegend .legendItems.startKnown{
-	 border-radius: 5px 0 0 5px;
-    border-width: 6px;
-	width: 0;
-	border: solid #333;
-	
-}
-#timelineLegend .legendItems.endKnown{
-	 border-radius: 0 5px 5px 0;
-    border-width: 6px;
-	width: 0;
-	border: solid #333;
-}
-#timelineLegend .legendItems.endUnknown{
-	border-radius: 0 5px 5px 0;
-}
-#timelineLegend .legendItems.startUnknown{
-	border-radius: 5px 0 0 5px;
-}
-.timeline-event-tape.tapeLayer0.singleDateEvent.between {
-   /*background-image: url("images/dp-grey-bg.png");*/
-}
-#timelineLegend .timeline-event-tape{
-	background-color: #fff;
-	position:relative;
-}
 
 
 

@@ -142,6 +142,7 @@ function Timescape_CSS($cusCss = NULL) {
 		$cusCss .= (variable_get('ts_tl_width')) ? "width:" . variable_get('ts_tl_width') . ";" : "";
 		$cusCss .= (variable_get('ts_tl_height')) ? "height:" . variable_get('ts_tl_height') . ";" : "";
 		$cusCss .= (variable_get('ts_timeline_border')) ? "border:" . variable_get('ts_timeline_border') . ";" : "";
+		$cusCss .= (variable_get('ts_tape_font_family')) ? "font-family:" . variable_get('ts_tape_font_family') . ";" : "auto";
 	$cusCss .= " }";
 	
 	$cusCss .= "#Timescape .timeline-band-0 .timeline-ether-bg {";
@@ -149,6 +150,9 @@ function Timescape_CSS($cusCss = NULL) {
 	$cusCss .= " }";
 	$cusCss .= "#Timescape .timeline-band-1 .timeline-ether-bg {";
 		$cusCss .= (variable_get('ts_tl_sec_bg_color')) ? "background-color:" . variable_get('ts_tl_sec_bg_color') . ";" : "";
+	$cusCss .= " }";
+	$cusCss .= "#Timescape #timeline-band-0 .timeline-band-events{";
+		$cusCss .= (variable_get('ts_tape_font_size')) ? "font-size:" . variable_get('ts_tape_font_size') . ";" : "auto";
 	$cusCss .= " }";
 	
 	

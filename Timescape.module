@@ -403,7 +403,7 @@ function Timescape_admin($form, &$form_state){
 		'#title' => t('Event Tape Styles'),
 		'#prefix' => '<table><tr><th>Category Name</th><th>Primary Colour</th><th></th><th>Secondary Colour</th><th></th></tr>',
 		'#suffix' => '</table>',
-		 '#collapsible' => FALSE,
+		 '#collapsible' => TRUE,
 		 '#collapsed' => FALSE,
 	  ); 
 
@@ -438,8 +438,22 @@ function Timescape_admin($form, &$form_state){
 	}
 	
 	//drupal_set_message('<pre>'. print_r($ts_categories, true) .'</pre>');
-		
-	$form['ts_style_group']['ts_user_styles'] = array(
+	
+  $form['ts_style_group']['ts_tape_font_family'] = array(
+    '#type' => 'textfield',
+	'#size' => '50',
+    '#title' => t('Font style for timeline labels '),
+	'#default_value' => variable_get('ts_tape_font_family', '"Helvetica Neue",Helvetica,Arial,sans-serif'),
+  );
+  
+  $form['ts_style_group']['ts_tape_font_size'] = array(
+    '#type' => 'textfield',
+	'#size' => '20',
+    '#title' => t('Font size for timeline event labels '),
+	'#default_value' => variable_get('ts_tape_font_size', '1em'),
+  );	
+  	
+   $form['ts_style_group']['ts_user_styles'] = array(
     '#type' => 'textarea',
 	'#rows' => '10',
     '#title' => t('Add custom CSS styles '),
@@ -539,6 +553,21 @@ function Timescape_admin($form, &$form_state){
 	'#default_value' => variable_get('ts_event_date_summary', false),
   );
   
+  
+  // ================== Page Text Group =======================
+  
+  $form['ts_page_text_group'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Page Text (HTML)'),
+	 '#collapsible' => TRUE,
+	 '#collapsed' => TRUE,
+  ); 
+    $form['ts_page_text_group']['ts_page_body_text'] = array(
+    '#type' => 'textarea',
+	'#rows' => '10',
+    '#title' => t('Add HTML to added to timeline page (e.g. legend) '),
+	'#default_value' => variable_get('ts_page_body_text', ''),
+  ); 
   
 	
 	return system_settings_form($form);
@@ -1074,19 +1103,31 @@ function Timescape_block_view($delta = '') {
 */
 function Timescape_view() {
 	$page_content  = '';
-  $page_content .= '<div id="Timescape">';
-	if (user_access('edit Timescape')) {
-		$page_content .= '<p style="text-align: right;"><a href="?q=timescape/edit" style="font-size: 18px">+ ADD NEW</a> - Or click on event to edit/delete.</p>';
-	}
+	$page_content .= '<div id="timeline_page_text">';
+	$page_content .= (variable_get('ts_page_body_text')) ? variable_get('ts_page_body_text') : "";	
+	$page_content .= '</div>';
 	/*$page_content .=  '<div id="timelineLegend">
         <div id="timelineCategories">
             <p id="legendCategoryWriting">Writings</p>
             <p id="legendCategoryArt">Visual Art</p>
             <p id="legendCategoryLetter">Correspondence</p>
             <p id="legendCategoryLife">Life</p>
-        </div>
+        </div></div>';*/
+		
+	//	$page_user_bodytext = (variable_get('ts_page_body_text')) ? variable_get('ts_page_body_text') : "";
+	//$page_user_bodytext = "test";
+	//$page_content .= '<div id="timeline_page_text">' + $page_user_bodytext  + '</div>';	
+		
+		
+	
+  $page_content .= '<div id="Timescape">';
+	if (user_access('edit Timescape')) {
+		$page_content .= '<div id="timeline_edit_control"><a href="?q=timescape/edit" style="font-size: 18px">+ ADD NEW</a> - Or click on event to edit/delete.</div>';
+	}
+	
+	
         
-        <div id="timelineDots">
+     /*   <div id="timelineDots">
         	<table>
               <tr>
                 <td class="icon"><div id="" class="legendItems startKnown timeline-event-tape tapeLayer0 singleDateEvent" style=" "></div></td>
