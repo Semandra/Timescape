@@ -272,7 +272,7 @@ function Timescape_admin($form, &$form_state){
   $form['ts_settings_group']['ts_page_title'] = array(
     '#type' => 'textfield',
 	'#size' => '50',
-    '#title' => t('Title to show on page (default is "Timescape")'),
+    '#title' => t('Title to show on page (leave blank for no title)'),
 	'#default_value' => variable_get('ts_page_title', ''),
   );
   
@@ -296,7 +296,8 @@ function Timescape_admin($form, &$form_state){
     '#type' => 'textfield',
 	'#size' => '10',
     '#title' => t('Center timeline on year  '),
-	'#default_value' => variable_get('ts_center_year', ''),
+	'#default_value' => variable_get('ts_center_year', '2017'),
+	'#required' => TRUE,
 	'#description' => t('Must be a valid date format - e.g. YYYY/MM/DD. Year only (i.e. YYYY) is valid'),
   );
   
@@ -1106,61 +1107,12 @@ function Timescape_view() {
 	$page_content .= '<div id="timeline_page_text">';
 	$page_content .= (variable_get('ts_page_body_text')) ? variable_get('ts_page_body_text') : "";	
 	$page_content .= '</div>';
-	/*$page_content .=  '<div id="timelineLegend">
-        <div id="timelineCategories">
-            <p id="legendCategoryWriting">Writings</p>
-            <p id="legendCategoryArt">Visual Art</p>
-            <p id="legendCategoryLetter">Correspondence</p>
-            <p id="legendCategoryLife">Life</p>
-        </div></div>';*/
-		
-	//	$page_user_bodytext = (variable_get('ts_page_body_text')) ? variable_get('ts_page_body_text') : "";
-	//$page_user_bodytext = "test";
-	//$page_content .= '<div id="timeline_page_text">' + $page_user_bodytext  + '</div>';	
-		
-		
 	
   $page_content .= '<div id="Timescape">';
 	if (user_access('edit Timescape')) {
 		$page_content .= '<div id="timeline_edit_control"><a href="?q=timescape/edit" style="font-size: 18px">+ ADD NEW</a> - Or click on event to edit/delete.</div>';
 	}
 	
-	
-        
-     /*   <div id="timelineDots">
-        	<table>
-              <tr>
-                <td class="icon"><div id="" class="legendItems startKnown timeline-event-tape tapeLayer0 singleDateEvent" style=" "></div></td>
-                <td> <p>Beginning Precisely</p></td>
-              </tr>
-              <tr>
-                <td class="icon"><div id="" class="legendItems endKnown timeline-event-tape tapeLayer0 singleDateEvent" style=""></div></td>
-                <td><p>Ending Precisely</p></td>
-              </tr>
-              <tr>
-                <td class="icon"><div id="" class="legendItems endUnknown timeline-event-tape tapeLayer0 " style=""></div></td>
-                <td><p>Beginning Approximately</p></td>
-              </tr>
-              <tr>
-                <td class="icon"><div id="" class="legendItems startUnknown timeline-event-tape tapeLayer0 " style=""></div></td>
-                <td><p>Ending Approximately</p></td>
-              </tr>
-              <tr>
-                <td class="icon"><div id="" class="legendItems startKnown endKnown between timeline-event-tape tapeLayer1" style="width: 45px; height: 8px; opacity: 1;border:none; border-radius:0"></div></td>
-                <td><p>From... To...</p></td>
-              </tr>
-              <tr>
-                <td class="icon"><div id="" class="startKnown endKnown between timeline-event-tape tapeLayer0 singleDateEvent" style="width: 45px; height: 8px; opacity: 1; border:none;"></div></td>
-                <td><p>Between... And...</p></td>
-              </tr>
-            </table>
-            <div class="iconWrapper">
-            	
-            </div>
-              
-        </div>
-    
-    </div>';*/
 	$page_content .= '<div id="NavText" style="display:none;"><a href="javascript:centerTimeline(1920);">Move to Beginning</a><a href="javascript:centerTimeline(2010);">Move to End</a></div>';
   $page_content .= '<div id="Timescape_timeline"></div>';
   $page_content .= '</div>';

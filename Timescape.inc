@@ -349,7 +349,9 @@ function Timescape_JSON($var = NULL) {
 		
 		$information .= "<p class='sub-title'> " . $event['sub_title'] . " </p>";
 		
-		$information .= "<p class='event-category'> " . $event['category'] . " </p>";
+		if (variable_get('ts_category')){
+			$information .= "<p class='event-category'> " . $event['category'] . " </p>";
+		}
 		
 		$information .= "<p class='sub-title location'> " . $event['location'] . " </p>";
 		
@@ -364,9 +366,6 @@ function Timescape_JSON($var = NULL) {
 			$information .= "</div>";
 		}
 		$information .= "<p class='event-sub-text'> " . $event['sub_text'] . " </p>";
-		
-		//===================FOR TESTING ONLY =======================================
-		$information .= "<p> Duration Event: " . $event['duration_event'] . " </p>";
 
 		//===========================================================================
 		
@@ -739,7 +738,7 @@ function _Timescape_Input($form, &$form_state, $values) {
 		'#title' => t('Link URL'),
 		'#size' => 75,
 		'#maxlength' => 255,
-		'#description' => t("Link URL (Title becomes link in popup bubble)."),
+		'#description' => t("Link URL (Title becomes link in popup bubble - use full URL, e.g. http://example.com, for external links)."),
 		'#required' => FALSE,
 		  '#default_value' => $values['link_URL']
 		);
@@ -822,8 +821,11 @@ function _Timescape_Input_submit($form_id, &$form_state) {
 				 'sub_text' => $form_state['values']['sub_text'],
 				 'caption' => $form_state['values']['caption'],
 				 'image_URL' => $form_state['values']['image_URL'],
-				 'link_URL' => $form_state['values']['link_URL'],
+				 //'link_URL' => $form_state['values']['link_URL'],
                  );
+	if (variable_get('ts_show_url_in_title')){
+		$fields['link_URL'] = $form_state['values']['link_URL'];
+	}
                
     if (!$form_state['values']['id']) {
       $fields['created_by'] = $user->name;

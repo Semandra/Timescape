@@ -42,19 +42,20 @@
  *   An array containing the drupal definition of the database. This definition
  *   is database independent.
 */
+
 function Timescape_schema() {
   return array('timescape_event' => 
                array('description' => 'Stores events for the Timescape timeline.',
                      'fields' => array('id'           => array('description' => 'Auto incrementing ID value.',
                                                                'type' => 'serial',
                                                                'size' => 'normal',
-                                                               'not null' => True,
-                                                               'unsigned' => True,
+                                                               'not null' => TRUE,
+                                                               'unsigned' => TRUE,
                                                                ),
                                        'title'         => array('description' => 'Name of the event.',
                                                                'type' => 'varchar',
                                                                'length' => 100,
-                                                               'not null' => False,
+                                                               'not null' => FALSE,
                                                                ),
                                        'start_date'   => array('description' => 'Start date of the event.',
                                                                'type' => 'int',
@@ -92,9 +93,9 @@ function Timescape_schema() {
                                                               'type' => 'text',
                                                               'size' => 'medium', 
                                                               ),
-                                       'sub_text'   => array('description' => 'Additional text.',
+                                       'sub_text'     => array('description' => 'Additional text.',
                                                               'type' => 'varchar',
-                                                              'size' => '200', 
+                                                              'length' => 200, 
                                                               ),
 										'caption'     => array('description' => 'Mouseover caption.',
                                                                'type' => 'varchar',
@@ -116,7 +117,7 @@ function Timescape_schema() {
                                                              'type' => 'int',
                                                               'size' => 'normal',
                                                               ),
-                                       'updated_by'  => array('description' => 'user name of the updator',
+                                       'updated_by'  => array('description' => 'user name of the updater',
                                                              'type' => 'varchar',
                                                              'length' => 50,
                                                               ),
@@ -151,4 +152,5 @@ function Timescape_uninstall() {
   variable_del('Timescape_dbname');
   variable_del('Timescape_dbuser');
   variable_del('Timescape_dbpass');
+  
 }
