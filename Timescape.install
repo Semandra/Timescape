@@ -153,4 +153,37 @@ function Timescape_uninstall() {
   variable_del('Timescape_dbuser');
   variable_del('Timescape_dbpass');
   
+  variable_del('ts_categories');
+  variable_del('ts_center_year');
+  variable_del('ts_color_p_other');
+  variable_del('ts_color_s_other');
+  variable_del('ts_date_format');
+  variable_del('ts_event_date_summary');
+  variable_del('ts_event_paint_direction');
+  variable_del('ts_event_timeline_dates');
+  variable_del('ts_json_file_path');
+  variable_del('ts_page_body_text');
+  variable_del('ts_page_title');
+  variable_del('ts_primary_height');
+  variable_del('ts_primary_interval');
+  variable_del('ts_secondary_height');
+  variable_del('ts_secondary_interval');
+  variable_del('ts_show_all_dates');
+  variable_del('ts_show_body_text');
+  variable_del('ts_show_bubble_title');
+  variable_del('ts_show_category');
+  variable_del('ts_show_hover_text');
+  variable_del('ts_show_location');
+  variable_del('ts_show_subtitle');
+  variable_del('ts_show_sub_text');
+  variable_del('ts_show_url_in_title');
+  variable_del('ts_tape_font_family');
+  variable_del('ts_tape_font_size');
+  variable_del('ts_tape_height');
+  variable_del('ts_timeline_border');
+  variable_del('ts_tl_height');
+  variable_del('ts_tl_prm_bg_color');
+  variable_del('ts_tl_width');
+  variable_del('ts_user_styles');
+  
 }

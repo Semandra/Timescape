@@ -4,7 +4,7 @@
 
 /**
  * This file is part of Timescape developed by Wolf Maul and Semandra Inc. 
- * 2014-15 - http://semandra.com.
+ * 2014-17 - http://semandra.com.
  * 
  * Timescape is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -110,10 +110,7 @@ function Timescape_jQuery() {
 	  theme.event.track.gap = 5;
 	  theme.event.tape.height = " . variable_get('ts_tape_height') . ";
 	  theme.event.duration.impreciseOpacity = 100;
-	  theme.event.instant.impreciseOpacity = 100; 
-
-
-   
+	  theme.event.instant.impreciseOpacity = 100;  
   ";
   return $script;
 }
@@ -126,18 +123,6 @@ function Timescape_jQuery() {
 function Timescape_CSS($cusCss = NULL) {
 	$ts_categories = (variable_get('ts_categories', array()));
 	$cusCss = "";
-	//$bg_color_prm = variable_get('ts_timeline_event_colors');
-	//$bg_color_scd = variable_get('ts_timeline_event_colors');
-	//$font-size = variable_get('ts_timeline_event_colors');
-	//$font = variable_get('ts_timeline_event_colors');
-
-	/*$cusCss = (variable_get('ts_timeline_border')) ? "#Timescape .Timescape_active {
-					border:" . variable_get('ts_timeline_border') . ";
-					}" : "";*/
-	//$cusCss = "#Timescape .Timescape_active {";
-		// border
-		// width
-		// height
 	$cusCss .= "#Timescape .Timescape_active {";
 		$cusCss .= (variable_get('ts_tl_width')) ? "width:" . variable_get('ts_tl_width') . ";" : "";
 		$cusCss .= (variable_get('ts_tl_height')) ? "height:" . variable_get('ts_tl_height') . ";" : "";
@@ -190,19 +175,16 @@ function Timescape_CSS($cusCss = NULL) {
 		$cusCss .= ".timeline-event-tape.tapeLayer0.endKnown." . $ts_category . "_event  {
 						border-right: solid ". $border ."px ". $evt_color .";
 						border-left: solid ". $border ."px ". $evt_color_band .";
-					}";
-					
-				//    background: radial-gradient(rgb(255, 35, 35) 0px, rgb(255, 35, 35) 20%, rgba(0, 0, 0, 0) 28%, rgba(0, 0, 0, 0) 100%) 0px 0px / 60px 60px no-repeat padding-box border-box;	
-			//background-image: radial-gradient(closest-side, transparent 80%, rgba(256,256,256,1) 100%), radial-gradient(closest-side, transparent 100%, rgba(256,256,256,1) 100%);
-			$cusCss .= ".timeline-event-tape.tapeLayer0.between." . $ts_category . "_event , .timeline-event-tape.tapeLayer1.between." . $ts_category . "_event  {
-						background-color: ". $evt_color_band .";
-						background: radial-gradient(". $evt_color_band ." 0px, ". $evt_color_band ." 50%, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0) 100%) 0px 0px;		
-						background-size:". $tape ."px ". $tape ."px;
-						background-position:0 0;
-						border-radius: ". $border ."px;
-						border-left: solid ". $border ."px ". $evt_color_band .";
-						border-right: solid ". $border ."px ". $evt_color_band .";
-					}
+					}";				
+		$cusCss .= ".timeline-event-tape.tapeLayer0.between." . $ts_category . "_event , .timeline-event-tape.tapeLayer1.between." . $ts_category . "_event  {
+					background-color: ". $evt_color_band .";
+					background: radial-gradient(". $evt_color_band ." 0px, ". $evt_color_band ." 50%, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0) 100%) 0px 0px;		
+					background-size:". $tape ."px ". $tape ."px;
+					background-position:0 0;
+					border-radius: ". $border ."px;
+					border-left: solid ". $border ."px ". $evt_color_band .";
+					border-right: solid ". $border ."px ". $evt_color_band .";
+				}
 					.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown." . $ts_category . "_event   {
 					border-left: solid ". $border ."px ". $evt_color .";
 					border-right: solid ". $border ."px ". $evt_color_band .";
@@ -236,71 +218,7 @@ function Timescape_CSS($cusCss = NULL) {
   if (isset($cusCss)) {
     echo $cusCss;
   }	
-	
 }
-
-/**
- * Generates XML that could used by the timeline
- *
- * Uses the php DOM functions to generate XML from databases and static
- * content. This function does not return a drupal formatted page but an
- * XML-file formatted as an attachment.
- *
-*/
-/*function Timescape_XML() {
-  drupal_add_http_header('Content-Type', 'text/xml');
-  //drupal_add_http_header('Content-Disposition', 'attachment; filename=Timescape.xml;');
-  
-  $events = _Timescape_load();
-  
- // Semandra: Removed this foreach because not using Timescape_DataBridge()
-	//	foreach (Timescape_DataBridge() as $type) {
-	 //   $events = array_merge($events, $type);
-	//	  }
-  
-  // Create the XML
-  $dom = new DOMDocument('1.0', 'UTF-8');
-  $dom->formatOutput = true;
-  $data = $dom->createElement('data');
-  $dataNode = $dom->appendChild($data);
-  
-  foreach ($events as $event) {
-    $information = '';
-    if (array_key_exists('institutions', $event)) { $information .= '<small><em>' . str_replace('MOH', 'Min. of Health', $event['institutions']) . '</em></small><br>'; }
-    if (array_key_exists('location', $event))     { $information .= '<em>' . ucwords($event['category'] . ' @ ' . $event['location']) . '</em><hr>'; }
-    if ($event['comments'])                       { $information .= $event['comments'] . '<br>'; }
-    if (array_key_exists('documents', $event) && $event['documents']) {
-      $files = explode(',', $event['documents']);
-      $information .= '<hr><strong>Attached Files</strong><br><ul>';
-      foreach ($files as $file) {
-        $information .= '<li><a href="' . drupal_get_path('module', 'Timescape') . '/uploads/' . $file . '">' . 
-                             str_replace('_', ' ', $file) . '</a></li>';
-      }
-    }  
-    $information .= '</ul>';
-    if (user_access('edit Timescape') and array_key_exists('id', $event)) {
-      $information .= '<hr> | ' . l(t('Edit'), 'timescape/edit/' . $event['id']) . ' | ' . 
-                      l(t('Delete'), 'timescape/delete/' . $event['id']) . ' |';
-    }
-    if ((array_key_exists('created_by', $event) and array_key_exists('updated_by', $event)) and 
-        ($event['created_by'] or $event['updated_by'])) {
-      $information .= '<p><small><em>';
-      $information .= $event['created_by'] ? 'Created by ' . $event['created_by'] . ' ' . strftime('%Y-%m-%d %H:%M', $event['created_at']) . '<br>' : '';
-      $information .= $event['updated_by'] ? 'Updated by ' . $event['updated_by'] . ' ' . strftime('%Y-%m-%d %H:%M', $event['updated_at']) : '';
-      $information .= '</em></small></p>';
-    }
-    $node = $dom->createElement('event', $information);
-    $node->setAttribute('title', $event['name']);
-    $node->setAttribute('start', $event['start_date']);
-    if ($event['end_date']) { $node->setAttribute('end',   $event['end_date']); }
-    
-    $eventNode = $data->appendChild($node);
-  }
-  
-  echo $dom->saveXML();
-  // Return that we're fine
-  exit(0);
-}*/
 
 
 /**
@@ -415,8 +333,7 @@ function Timescape_JSON($var = NULL) {
 		$node['start'] = $event['start_date'];
 		$node['end'] = $event['end_date'];
 		//$node['latestStart'] = $event['late_start'];
-		//$node['earliestEnd'] = $event['early_end'];
-		
+		//$node['earliestEnd'] = $event['early_end'];	
 		//$node['latestStart'] = ($event['late_start'] == NULL) ? false : $event['late_start'];
 		//$node['earliestEnd'] = ($event['early_end'] == NULL) ? false : $event['early_end'];
 		
@@ -768,7 +685,6 @@ function _Timescape_Input_validate(&$form, &$form_state) {
   $date_regexp = '/\d{4}-\d{2}-\d{2}/';
   
   if (!preg_match($date_regexp, $form_state['values']['start_date'])) {
-		//form_set_error('event_start', t('You must enter a start date in the form (YYYY-MM-DD HH:MM) e.g. 2010-11-04 15:58.'));
 		form_set_error('event_start', t('You must enter a start date in the form (YYYY-MM-DD) e.g. 2010-11-04'));
   }
   
@@ -821,7 +737,6 @@ function _Timescape_Input_submit($form_id, &$form_state) {
 				 'sub_text' => $form_state['values']['sub_text'],
 				 'caption' => $form_state['values']['caption'],
 				 'image_URL' => $form_state['values']['image_URL'],
-				 //'link_URL' => $form_state['values']['link_URL'],
                  );
 	if (variable_get('ts_show_url_in_title')){
 		$fields['link_URL'] = $form_state['values']['link_URL'];
@@ -848,7 +763,7 @@ function _Timescape_Input_submit($form_id, &$form_state) {
   }
   
 	$form_state['redirect'] = 'timescape';
-  // Unless the transaction was rolled back, it gets commited here 
+  	//Unless the transaction was rolled back, it gets commited here 
 }
 
 /**

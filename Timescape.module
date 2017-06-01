@@ -40,44 +40,22 @@ function Timescape_init() {
 
   // Load Timeline 2.3.0 javascripts
   // Excplicitly load the ajax api to avoid load on the timeline server
-drupal_add_js('Timeline_ajax_url="' . drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_ajax/simile-ajax-api.js";
+  drupal_add_js('Timeline_ajax_url="' . drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_ajax/simile-ajax-api.js";
                  Timeline_urlPrefix="' . drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/";       
                  Timeline_parameters="bundle=true";', 
                array('type' => 'inline',));
-	//drupal_add_js('Timeline_urlPrefix="' . drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/";       
-//                 Timeline_parameters="bundle=true";', 
- //              array('type' => 'inline',));
-// drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/timeline-api.js');
-// drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_ajax/simile-ajax-api.js');
+  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timeline-api-cust.js'); //Semandra -- cut out ajax loading of css for customization
+  drupal_add_css(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/timeline-bundle.css'); //load simile css through Drupal
+  drupal_add_css(drupal_get_path('module', 'Timescape') . '/css/timescape-timeline.css'); //load customizations for timeline
+  drupal_add_css($GLOBALS['base_path']  . 'timescape/css', $options); // Uses the generated CSS page (Timescape.inc - function Timescape_CSS 
 
-//drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/scripts/platform.js');
-//drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/scripts/debug.js');
-//drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/scripts/xmlhttp.js');
-//drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/scripts/json.js');
-//drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/scripts/dom.js');
-//drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/scripts/graphics.js');
-//drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/scripts/date-time.js');
-//drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/scripts/string.js');
-//drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/scripts/html.js');
-//drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/scripts/data-structure.js');
-//drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/scripts/units.js');
-//drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/scripts/ajax.js');
-//drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/scripts/history.js');
-//drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/scripts/window-manager.js');
-//drupal_add_js(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/timeline-bundle-min.js');
-drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timeline-api-cust.js'); //Semandra -- cut out ajax loading of css for customization
-drupal_add_css(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/timeline-bundle.css'); //load simile css through Drupal
- drupal_add_css(drupal_get_path('module', 'Timescape') . '/css/timescape-timeline.css'); //load customizations for timeline
- 
- drupal_add_css($GLOBALS['base_path']  . 'timescape/css', $options); // Uses the generated CSS page (Timescape.inc - function Timescape_CSS 
-
- //drupal_add_css(drupal_get_path('module', 'Timescape') . '/css/test.css'); 
- 
   // Load datetimepicker functions and css for the input form
   //drupal_add_js(drupal_get_path('module', 'Timescape') . '/anytime/anytimec.js');
   //drupal_add_css(drupal_get_path('module', 'Timescape') . '/anytime/anytimec.css');
+  
   // Load the MultiFile upload scripts
   //drupal_add_js(drupal_get_path('module', 'Timescape') . '/MultiFile/jquery.MultiFile.js');
+  
   // Load the specific timeline we want to use.
   drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timescape-theme.js');
   drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timescape-original-painter.js');
@@ -89,7 +67,6 @@ drupal_add_css(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeli
   // Initialize the timeline javascript with another javascript function
   drupal_add_js(Timescape_jQuery(), 'inline'); // Adds execution code for on document load + setup/customization variables from admin
   
-  //drupal_add_css(Timescape_customCss(), 'inline');
 }
 
 /** 
@@ -160,10 +137,6 @@ function Timescape_permission(){
                ),
               );
 }
-
-
-
-
 
 function data_file_form_submit($form, $form_state) {
     echo "something here" ; // is not being called!
