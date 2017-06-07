@@ -35,37 +35,45 @@ function Timescape_init() {
 	'every_page' => false
   );
   
+  $options2 = array (
+	'every_page' => false
+  );
+  
   drupal_set_title($title = variable_get('ts_page_title', NULL), $output = CHECK_PLAIN);
 //TODO -- Only load this javascript and css if on the timeline page??
 
   // Load Timeline 2.3.0 javascripts
   // Excplicitly load the ajax api to avoid load on the timeline server
-  drupal_add_js('Timeline_ajax_url="' . drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_ajax/simile-ajax-api.js";
+
+  
+  if (current_path() == 'timescape') {
+	    drupal_add_js('Timeline_ajax_url="' . drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_ajax/simile-ajax-api.js";
                  Timeline_urlPrefix="' . drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/";       
                  Timeline_parameters="bundle=true";', 
-               array('type' => 'inline',));
-  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timeline-api-cust.js'); //Semandra -- cut out ajax loading of css for customization
-  drupal_add_css(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/timeline-bundle.css'); //load simile css through Drupal
-  drupal_add_css(drupal_get_path('module', 'Timescape') . '/css/timescape-timeline.css'); //load customizations for timeline
-  drupal_add_css($GLOBALS['base_path']  . 'timescape/css', $options); // Uses the generated CSS page (Timescape.inc - function Timescape_CSS 
-
-  // Load datetimepicker functions and css for the input form
-  //drupal_add_js(drupal_get_path('module', 'Timescape') . '/anytime/anytimec.js');
-  //drupal_add_css(drupal_get_path('module', 'Timescape') . '/anytime/anytimec.css');
-  
-  // Load the MultiFile upload scripts
-  //drupal_add_js(drupal_get_path('module', 'Timescape') . '/MultiFile/jquery.MultiFile.js');
-  
-  // Load the specific timeline we want to use.
-  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timescape-theme.js');
-  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timescape-original-painter.js');
-  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/simile-patch.js');
- // drupal_add_css(drupal_get_path('module', 'Timescape') . '/Timescape.css');
-  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timescape.js');
-  // Load http://momentjs.com/ to easily format dates
-  drupal_add_js(drupal_get_path('module', 'Timescape') . '/moment.js'); // Assists with date formatting 
-  // Initialize the timeline javascript with another javascript function
-  drupal_add_js(Timescape_jQuery(), 'inline'); // Adds execution code for on document load + setup/customization variables from admin
+               array('type' => 'inline','every_page' => false));
+	  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timeline-api-cust.js', $options); //Semandra -- cut out ajax loading of css for customization
+	  drupal_add_css(drupal_get_path('module', 'Timescape') . '/timeline_simile/timeline_js/timeline-bundle.css', $options); //load simile css through Drupal
+	  drupal_add_css(drupal_get_path('module', 'Timescape') . '/css/timescape-timeline.css', $options); //load customizations for timeline
+	  drupal_add_css($GLOBALS['base_path']  . 'timescape/css', $options); // Uses the generated CSS page (Timescape.inc - function Timescape_CSS 
+	
+	  // Load datetimepicker functions and css for the input form
+	  //drupal_add_js(drupal_get_path('module', 'Timescape') . '/anytime/anytimec.js');
+	  //drupal_add_css(drupal_get_path('module', 'Timescape') . '/anytime/anytimec.css');
+	  
+	  // Load the MultiFile upload scripts
+	  //drupal_add_js(drupal_get_path('module', 'Timescape') . '/MultiFile/jquery.MultiFile.js');
+	  
+	  // Load the specific timeline we want to use.
+	  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timescape-theme.js', $options);
+	  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timescape-original-painter.js', $options);
+	  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/simile-patch.js', $options);
+	 // drupal_add_css(drupal_get_path('module', 'Timescape') . '/Timescape.css');
+	  drupal_add_js(drupal_get_path('module', 'Timescape') . '/js/timescape.js', $options);
+	  // Load http://momentjs.com/ to easily format dates
+	  drupal_add_js(drupal_get_path('module', 'Timescape') . '/moment.js', $options); // Assists with date formatting 
+	  // Initialize the timeline javascript with another javascript function
+	  drupal_add_js(Timescape_jQuery(), 'inline'); // Adds execution code for on document load + setup/customization variables from admin
+  }
   
 }
 
@@ -460,7 +468,7 @@ function Timescape_admin($form, &$form_state){
   // Show Subtitle in bubble (default true)
   $form['ts_bubble_group']['ts_show_subtitle'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Use title in bubble'),
+    '#title' => t('Use sub-title in bubble'),
 	'#default_value' => variable_get('ts_show_subtitle', true),
   );	
   
@@ -474,7 +482,7 @@ function Timescape_admin($form, &$form_state){
   // Show Location in bubble (default true)
   $form['ts_bubble_group']['ts_show_location'] = array(
     '#type' => 'checkbox',
-    '#title' => t('Use location in bubble popup'),
+    '#title' => t('Show location in bubble popup'),
 	'#default_value' => variable_get('ts_show_location', true),
   );	
   // Show description (body text) in bubble (default true)
@@ -488,6 +496,12 @@ function Timescape_admin($form, &$form_state){
     '#type' => 'checkbox',
     '#title' => t('Use below-body text in bubble popup'),
 	'#default_value' => variable_get('ts_show_sub_text', true),
+  );	
+  // Show image at top of bubble (default true)
+  $form['ts_bubble_group']['ts_show_image'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Show image (from link) in bubble popup'),
+	'#default_value' => variable_get('ts_show_image', true),
   );	
   
   // Show hover text in chart and bubble (default true)

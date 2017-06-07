@@ -151,11 +151,11 @@ function Timescape_CSS($cusCss = NULL) {
 		$tape = variable_get('ts_tape_height');
 		$border = $tape / 2;
 		
-		$cusCss .= ".timeline-small-event-tape." . $ts_category . "_event {
+		$cusCss .= "#Timescape .timeline-small-event-tape." . $ts_category . "_event {
 						background-color: ". $evt_color .";
 					}";
 	
-		$cusCss .= ".timeline-event-tape.tapeLayer0." . $ts_category . "_event , .timeline-event-tape.tapeLayer1." . $ts_category . "_event  {
+		$cusCss .= "#Timescape .timeline-event-tape.tapeLayer0." . $ts_category . "_event , #Timescape .timeline-event-tape.tapeLayer1." . $ts_category . "_event  {
 						background-color: ". $evt_color_band .";
 						border-radius: ". $border ."px;
 						border-width: ". $border ."px;
@@ -163,20 +163,20 @@ function Timescape_CSS($cusCss = NULL) {
 						border-right: solid ". $border ."px ". $evt_color_band .";
 					}";
 	
-		$cusCss .= ".timeline-event-tape.tapeLayer0.startKnown." . $ts_category . "_event {
+		$cusCss .= "#Timescape .timeline-event-tape.tapeLayer0.startKnown." . $ts_category . "_event {
 						border-left: solid ". $border ."px ". $evt_color .";
 						border-right: solid ". $border ."px ". $evt_color_band .";
 						border-radius: ". $border ."px;
 					}";
-		$cusCss .= ".timeline-event-tape.tapeLayer0.startKnown.endKnown." . $ts_category . "_event {
+		$cusCss .= "#Timescape .timeline-event-tape.tapeLayer0.startKnown.endKnown." . $ts_category . "_event {
 						border-left: solid ". $border ."px ". $evt_color .";
 						border-right: solid ". $border ."px ". $evt_color .";
 					}";
-		$cusCss .= ".timeline-event-tape.tapeLayer0.endKnown." . $ts_category . "_event  {
+		$cusCss .= "#Timescape .timeline-event-tape.tapeLayer0.endKnown." . $ts_category . "_event  {
 						border-right: solid ". $border ."px ". $evt_color .";
 						border-left: solid ". $border ."px ". $evt_color_band .";
 					}";				
-		$cusCss .= ".timeline-event-tape.tapeLayer0.between." . $ts_category . "_event , .timeline-event-tape.tapeLayer1.between." . $ts_category . "_event  {
+		$cusCss .= "#Timescape .timeline-event-tape.tapeLayer0.between." . $ts_category . "_event , #Timescape .timeline-event-tape.tapeLayer1.between." . $ts_category . "_event  {
 					background-color: ". $evt_color_band .";
 					background: radial-gradient(". $evt_color_band ." 0px, ". $evt_color_band ." 50%, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0) 100%) 0px 0px;		
 					background-size:". $tape ."px ". $tape ."px;
@@ -185,15 +185,15 @@ function Timescape_CSS($cusCss = NULL) {
 					border-left: solid ". $border ."px ". $evt_color_band .";
 					border-right: solid ". $border ."px ". $evt_color_band .";
 				}
-					.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown." . $ts_category . "_event   {
+					#Timescape .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown." . $ts_category . "_event   {
 					border-left: solid ". $border ."px ". $evt_color .";
 					border-right: solid ". $border ."px ". $evt_color_band .";
 				}
-				 .timeline-event-tape.tapeLayer0.singleDateEvent.between.endKnown." . $ts_category . "_event   {
+				 #Timescape .timeline-event-tape.tapeLayer0.singleDateEvent.between.endKnown." . $ts_category . "_event   {
 					border-right: solid ". $border ."px ". $evt_color .";
 					border-left: solid ". $border ."px ". $evt_color_band .";
 				}
-				.timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown." . $ts_category . "_event   {
+				#Timescape .timeline-event-tape.tapeLayer0.singleDateEvent.between.startKnown.endKnown." . $ts_category . "_event   {
 					border-left: solid ". $border ."px ". $evt_color .";
 					border-right: solid ". $border ."px ". $evt_color .";
 				}";
@@ -260,20 +260,34 @@ function Timescape_JSON($var = NULL) {
 	$srtKwn = "";
 	$endKwn = "";
 	$btwn = "";
+	
+	if (variable_get('ts_show_bubble_title')){
+		$new_css = variable_get('ts_user_styles') + ".page-timescape .timeline-event-bubble-title {display: inherit;}";
+		variable_set('ts_user_styles', $new_css);
+		drupal_set_message(variable_get('ts_user_styles'));
+	}else{
+		$new_css = variable_get('ts_user_styles') + ".page-timescape .timeline-event-bubble-title {display: none;}";
+		variable_set('ts_user_styles', $new_css);
+		
+	}
+	//variable_get('ts_user_styles');
 
 	foreach ($events as $event) {
 		//format information [text in popup bubble] using information fields
 		$information = '';
-		
-		$information .= "<p class='sub-title'> " . $event['sub_title'] . " </p>";
-		
-		if (variable_get('ts_category')){
+				
+		if (variable_get('ts_show_subtitle')){
+			$information .= "<p class='sub-title'> " . $event['sub_title'] . " </p>";
+		}	
+		if (variable_get('ts_show_category')){
 			$information .= "<p class='event-category'> " . $event['category'] . " </p>";
 		}
-		
-		$information .= "<p class='sub-title location'> " . $event['location'] . " </p>";
-		
-		$information .= "<p class='description'> " . $event['description'] . " </p>";
+		if (variable_get('ts_show_location')){
+			$information .= "<p class='sub-title location'> " . $event['location'] . " </p>";
+		}
+		if (variable_get('ts_show_body_text')){
+			$information .= "<p class='description'> " . $event['description'] . " </p>";
+		}
 	
 		if (variable_get('ts_show_all_dates')){
 			$information .= "<div id='dateRange'>";
@@ -283,7 +297,12 @@ function Timescape_JSON($var = NULL) {
 			}
 			$information .= "</div>";
 		}
-		$information .= "<p class='event-sub-text'> " . $event['sub_text'] . " </p>";
+		
+		if (variable_get('ts_show_sub_text')){
+			$information .= "<p class='event-sub-text'> " . $event['sub_text'] . " </p>";
+		}
+		
+		
 
 		//===========================================================================
 		
@@ -328,7 +347,6 @@ function Timescape_JSON($var = NULL) {
 			$information .= "<div id='evntEdtBtns'><span class='tinybutton'> " . l(t('Edit'), 'timescape/edit/' . $event['id']) . " </span>";
 			$information .= "<span class='tinybutton'> " . l(t('Delete'), 'timescape/delete/' . $event['id']) . " </span></div>";
 		}
-		
 		$node['title'] = $event['title'];
 		$node['start'] = $event['start_date'];
 		$node['end'] = $event['end_date'];
@@ -341,7 +359,11 @@ function Timescape_JSON($var = NULL) {
 		
 		//$node['durationEvent'] = $event['duration_event'];
 		
-		$node['image'] = $event['image_URL'];
+		if (variable_get('ts_show_image')){
+			$node['image'] = $event['image_URL'];
+		}
+		
+		
 		$node['caption'] = $event['caption'];
 		$node['link'] = $event['link_URL'];
 		$node['description'] =  $information;
