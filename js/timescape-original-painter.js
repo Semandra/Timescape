@@ -678,7 +678,7 @@ Timeline.OriginalEventPainter.prototype.showBubble = function(evt) {
     var elmt = this._eventIdToElmt[evt.getID()];
     if (elmt) {
         var c = SimileAjax.DOM.getPageCoordinates(elmt);
-        this._showBubble(c.left + elmt.offsetWidth / 2, c.top + elmt.offsetHeight / 2, evt);
+        this._showBubble(c.left + elmt.offsetWidth / 2, c.top + elmt.offsetHeight/ 2, evt);
     }
 };
 

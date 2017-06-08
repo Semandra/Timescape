@@ -264,7 +264,6 @@ function Timescape_JSON($var = NULL) {
 	if (variable_get('ts_show_bubble_title')){
 		$new_css = variable_get('ts_user_styles') + ".page-timescape .timeline-event-bubble-title {display: inherit;}";
 		variable_set('ts_user_styles', $new_css);
-		drupal_set_message(variable_get('ts_user_styles'));
 	}else{
 		$new_css = variable_get('ts_user_styles') + ".page-timescape .timeline-event-bubble-title {display: none;}";
 		variable_set('ts_user_styles', $new_css);

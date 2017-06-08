@@ -320,11 +320,11 @@ Timeline.DefaultEventSource.Event.prototype = {
         var dateEarlyEnd = new Date(labeller.labelPrecise(this._earliestEnd));
         var dateEnd = new Date(labeller.labelPrecise(this._end));
 		
-		console.log(dateStart);
-		console.log(dateLatestStart);
-		console.log(dateEarlyEnd);
-		console.log(dateEnd);
-        console.log(this._obj.displayDate);
+		//console.log(dateStart);
+		//console.log(dateLatestStart);
+		//console.log(dateEarlyEnd);
+		//console.log(dateEnd);
+        //console.log(this._obj.displayDate);
 
         dateStart = dateStart.format('mmm d, yyyy');
         dateLatestStart = dateLatestStart.format('mmm d, yyyy');
@@ -340,22 +340,22 @@ Timeline.DefaultEventSource.Event.prototype = {
         var title = this.getText();
         var link = this.getLink();
         var image = this.getImage();
-        if (image != null) {
+        if (image !== null) {
             var img = doc.createElement("img");
             img.src = image;
             theme.event.bubble.imageStyler(img);
             elmt.appendChild(img);
         }
         var divTitle = doc.createElement("div");
-        if (link != null) {
+        if (link !== null) {
             var a = doc.createElement("a");
             a.href = link;
-			a.innerHTML = title
+			a.innerHTML = title;
             divTitle.appendChild(a);			
         } else {
 		 	divTitle.innerHTML = title;
         }
-		console.log (theme.event.bubble.titleStyler)
+		//console.log (theme.event.bubble.titleStyler);
         theme.event.bubble.titleStyler(divTitle);
         elmt.appendChild(divTitle);
 		
@@ -364,7 +364,7 @@ Timeline.DefaultEventSource.Event.prototype = {
         theme.event.bubble.bodyStyler(divBody);
         elmt.appendChild(divBody);
 		
-		console.log (divBody)
+		//console.log (divBody);
 		
         var divTime = doc.createElement("div");
         this.fillTime(divTime, labeller);
